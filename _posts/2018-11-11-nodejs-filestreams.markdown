@@ -33,7 +33,7 @@ file.end();
 
 웹서버를 통해 아래 파일을 읽는 작업을 해보자.
 
-{% highlight javascript %}
+```javascript
 const fs = require('fs');
 const server = require('http').createServer();
 
@@ -45,14 +45,14 @@ server.on('request', (req, res) => {
   })
 })
 server.listen(8000);
-{% endhighlight }
+```
 
 실행 직후 노드는 9168K (9mb) 정도의 사용량을 보였다.
 이제 서버에 접속해보면 노드 프로세스의 사용량이 400mb를 넘게 되는 것을 확인할 수 있다.
 이는 readFile의 경우 파일 내용을 전부 메모리에 올려놓기 때문이다. 
 
 이 문제를 해결하기 위해 Read Stream을 이용하여 HTTP Response에 Stream을 내려주도록 한다
-{% highlight javascript %}
+```javascript
 const fs = require('fs');
 const server = require('http').createServer();
 
@@ -61,7 +61,7 @@ server.on('request', (req, res) => {
   src.pipe(res);
 })
 server.listen(8000);
-{% endhighlight }
+```
 
 이 방식대로 진행하면 메모리에 모든 내용을 버퍼로 잡지 않기 때문에 훨씬적은 메모리를 기반으로 데이터를 전달할 수 있다.
 
@@ -76,7 +76,7 @@ server.listen(8000);
 
 ### Read Stream 실제로 사용해보기
 `createReadStream`을 실제로 사용하는 예제를 작성해보자.
-{% highlight javascript %}
+```javascript
 const fs = require('fs');
 const src = fs.createReadStream('./test1');
 src.on("readable", () => {
@@ -90,7 +90,7 @@ src.on("readable", () => {
 src.on("end", () => {
   console.log("File has ended");
 })
-{% endhighlight }
+```
 
 `readable` 이벤트는 stream으로부터 읽을 수 있는 데이터가 있을 때 실행된다. 해당 이벤트는 새로운 데이터가 존재하거나, 스트림의 마지막에 도착하였음을 나타낸다. 전자의 경우, `read()`가 활용 가능한 데이터를 반환할 것이고, 후자의 경우 `null`을 반환할 것이다. 
 * `read`의 EOF는 null, 혹은 `destroy()` 호출을 통해 시행할 수 있다.
@@ -99,7 +99,7 @@ src.on("end", () => {
 ### `pipe`
 `pipe` 이벤트는 `stream.pipe()` 메소드가 readable stream에 호출되었을 때 방출되며, 해당 writable을 목적지에 추가한다.
 
-{% highlight javascript %}
+```javascript
 const fs = require('fs');
 const assert = require('assert');
 const writer = fs.createWriteStream(__dirname + "/test2");
@@ -111,7 +111,7 @@ writer.on('pipe', (src) => {
 })
 
 reader.pipe(writer);
-{% endhighlight }
+```
 
 위 과정에서 `createReadStream`은 `test1` 파일을 읽은 뒤 pipe로 해당 내용을 전달한다. `pipe` 이벤트는 해당 writable을 목적지에 전달한다.
 `createWriteStream`의 `test2` 파일은 `pipe` 이벤트를 대기하고, 이벤트가 접수되면 데이터를 받은 후 `assert` 함수를 진행 한 후, 완료되면 정상적으로 파일에 데이터를 추가한다.
@@ -136,7 +136,7 @@ Readable stream이 일시정지 모드일 때 스트림을 읽기 위해 `read()
 ## 스트림 구현
 
 ### 쓰기 스트림 만들기
-{% highlight javascript %}
+```javascript
 const { Writable } = require('stream');
 
 class myWritableStream extends Writable {
@@ -149,12 +149,12 @@ class myWritableStream extends Writable {
 const outStream = new myWritableStream();
 
 process.stdin.pipe(outStream);
-{% endhighlight %}
+```
 
 스트림 모듈의 `Writable` 클래스를 이용하여 구현을 진행하였다. (ES6 형식으로 작성할 경우 `_write` 메소드를 사용하자)
 
 ### 읽기 스트림 만들기
-{% highlight javascript %}
+```javascript
 const { Readable } = require('stream');
 
 class myReadableStream extends Readable {
@@ -175,7 +175,7 @@ class myReadableStream extends Readable {
 const inStream = new myReadableStream();
 
 inStream.pipe(process.stdout);
-{% endhighlight %}
+```
 
 읽기 스트림을 `_read` 메소드에서 호출시 일부 데이터를 Queue에 푸시하게 된다. 마지막으로 90이 넘었을 때 (알파벳 Z) `this.destroy()` 를 호출함으로써 `_read`를 종료시킨다.
 
