@@ -6,8 +6,11 @@ categories: "nodejs"
 ---
 ### Reference
 [(재인용) Node.js Stream 당신이 알아야할 모든 것][reference-01]
+
 [(원글) Node.js Streams: Everything you need to know][reference-02]
+
 [Node js Streams Tutorial: Filestream. Pipes][reference-03]
+
 [Creating duplex streams with Node.js][reference-04]
 
 ## 스트림이란?
@@ -96,7 +99,7 @@ src.on("end", () => {
 * `read`의 EOF는 null, 혹은 `destroy()` 호출을 통해 시행할 수 있다.
 
 
-### `pipe`
+### Pipe 이벤트
 `pipe` 이벤트는 `stream.pipe()` 메소드가 readable stream에 호출되었을 때 방출되며, 해당 writable을 목적지에 추가한다.
 
 ```javascript
