@@ -43,22 +43,108 @@ $width: 5em;
 
 ## Data Types
 SassScript는 아래와 같은 8가지 종류의 데이터 타입들을 지원한다.
-**numbers: 숫자 (1, 2, 3, 4, 10px...)**
-
-**strings of text: 따옴표를 포함하거나 포함하지 않는 글자 ("foo", 'bar', foobar)**
+* numbers: 숫자 (1, 2, 3, 4, 10px...)
+* strings of text: 따옴표를 포함하거나 포함하지 않는 글자 ("foo", 'bar', foobar)
 `margin: 10px 15px 0 0` 혹은 `font-face: Helvetica, Arial` 등 n개의 값이 선언되어 있으며 띄어쓰기나 콤마로 구분되어 있다. 한개의 값만 들어가는 경우에도 길이가 1인 list라고 볼 수 있다.
 List는 한 공간에 n개 만큼 넣을 수도 있는데, 예를들어 `1px 2px, 5px 6px`과 같이 `1px 2px`짜리 리스트와 `5px 6px`짜리 리스트를 동시에 사용할 수 있다. 다만 이 경우에는 양옆에 소괄호를 사용하여 시작과 끝을 명시해주는 것이 좋다. `(1px 2px) (5px 6px)`과 같이. (결과물의 차이는 없다)
 List는 아무런 값도 갖지 않을 수 있는데, CSS로 출력은 되지 않는다. `font-family: ()`와 같이 선언할 경우, Sass가 에러를 출력하게 된다. (빈 리스트와 null 값은 CSS로 변환 전에 제거 된다)
 이 외에도 대괄호로도 List를 작성할 수 있고, 콤마를 마지막에만 넣음으로써 값이 하나만 있는 List를 나타낼 수도 있다.
+* colors: 색상값 (blue, #ffffff, rgba(255, 255, 255, 0.1))
+* booleans: 불린값 (true, false)
+* nulls: 널값 (null)
+* lists of values, separated by spaces or commas: 띄어쓰기나 콤마로 나뉘어져있는 행렬 (1.5em 1em 0 2em, Helvetica, Arial, sans-serif)
+* maps from one value to another: 하나의 값에서 다른 값으로 연결해주는 Map ((key1: value1, key2: value2))
+* function references: 함수 참고
 
-**colors: 색상값 (blue, #ffffff, rgba(255, 255, 255, 0.1))**
 
-**booleans: 불린값 (true, false)**
+## Media
+미디어 쿼리는 CSS와 동일하게 작동하지만, CSS 값에 네스팅 될 수 있다는 차이점을 갖는다. 네스팅 되어 안에 들어갈 경우, 컴파일 될 때 최 상단으로 올라오며, 올라오면서 모든 선택자들을 해당 미디어 쿼리 안에 넣는다. 이렇게 함으로써 선택자를 반복하는 방식은 하지 않아도 된다.
+```scss
+.sidebar {
+  width: 300px;
+  @media screen and (orientation: landscape) {
+    width: 500px;
+  }
+}
+```
+```css
+.sidebar {
+  width: 300px;
+}
+@media screen and (orientation: landscape) {
+  .sidebar {
+    width: 500px;
+  }
+}
+```
 
-**nulls: 널값 (null)**
+SassScript의 변수명 역시 사용할 수 있다.
+```scss
+$media: screen;
+$feature: -webkit-min-device-pixel-ratio;
+$value: 1.5;
 
-**lists of values, separated by spaces or commas: 띄어쓰기나 콤마로 나뉘어져있는 행렬 (1.5em 1em 0 2em, Helvetica, Arial, sans-serif)**
+@media #{$media} and ($feature: $value) {
+  .sidebar {
+    width: 500px;
+  }
+}
+```
+```css
+@media screen and (-webkit-min-device-pixel-ratio: 1.5) {
+  .sidebar {
+    width: 500px;
+  }
+}
+```
 
-**maps from one value to another: 하나의 값에서 다른 값으로 연결해주는 Map ((key1: value1, key2: value2))**
+## Mixin
+Mixin은 Stylesheet 내에서 의미가 부여되지 않은 클래스(`.float-left`와 같은)를 사용하지 않고 재사용 가능한 스타일 모음을 만든다. CSS 규칙을 모두 사용할 수 있으며, 인자(argument)를 받아서 사용할 수도 있다.
 
-**function references: 함수 참고**
+```scss
+@mixin large-text {
+  font: {
+    family: Arial;
+    size: 20px;
+    weight: bold;
+  }
+  color: #ff0000;
+}
+```
+
+Mixin의 사용은 `@include`를 사용하여 포함시킬 수 있다.
+
+```scss
+.page-title {
+  @include large-text;
+  padding: 4px;
+  margin-top: 10px;
+}
+```
+
+```css
+.page-title {
+  font-family: Arial;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff0000;
+  padding: 4px;
+  margin-top: 10px;
+}
+```
+
+여기서 다소 신기할 수 있는 부분이, `font` 안에 있는 항목들이 전부 `font-*`로 컴파일 된 것을 확인할 수 있다. 기존에 CSS는 네임스페이스라 불렀는데, 위의 예제는 `font` 네임스페이스 아래에 있는 항목들이었다. 기존의 방식으로는 타이핑 하기 위해서는 전부 타이핑을 해야 했으나, Sass 문법에서는 Nested Properties 속성을 통해 네스팅을 해줌으로써 작업량을 훨씬 줄일 수 있다.
+
+## Function
+물론, function도 사용할 수 있다. function은 mixin과 굉장히 유사하게 동작하고, **반드시 `@return` 을 통해 값을 반환해야한다.**
+
+```scss
+$grid-width: 40px;
+$gutter-width: 10px;
+
+@function grid-width($n) {
+  @return $n * $grid-width + ($n - 1) * $gutter-width;
+}
+
+#sidebar { width: grid-width(5); }
+```
