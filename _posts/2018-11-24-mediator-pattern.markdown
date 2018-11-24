@@ -16,6 +16,7 @@ categories: "javascript"
 중재자는 모든 객체에 대해 알고 있으며, 이벤트 처리와 플레이어 차례를 알려준다. 전달된 점수는 점수판에 표시된다.
 
 * 아래 코드는 모두 ES6로 작성된 뒤, Webpack으로 번들링되었다. 
+* 코드는 다음 Repo에서 확인 가능: https://github.com/immigration9/javascript-patterns
 ```html
 <!DOCTYPE html>
 <html>
