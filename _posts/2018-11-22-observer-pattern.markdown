@@ -145,6 +145,9 @@ class Paper extends Publisher {
   daily = () => {
     this.publish("[Washington Post]");
   }
+  weekly = () => {
+    this.publish("[Hustler]", "weekly");
+  }
   monthly = () => {
     this.publish("[Horse & Hounds]", "monthly");
   }
@@ -178,14 +181,16 @@ export default Subscriber
 import paper from './Paper';
 import Subscriber from './Subscriber'
 
-let joe = new Subscriber('joe');
-let jane = new Subscriber('jane');
+let joe = new Subscriber('Joe');
+let jane = new Subscriber('Jane');
+let john = new Subscriber('John');
 
 /**
  * Registers the both users' `readNews` method.
  */
 paper.subscribe(joe.readNews);
 paper.subscribe(jane.readNews, 'monthly');
+paper.subscribe(john.readNews, 'weekly');
 
 /**
  * Invoke functions within `paper` object.
@@ -195,6 +200,7 @@ paper.daily();
 paper.daily();
 paper.daily();
 paper.daily();
+paper.weekly();
 paper.monthly();
 ```
 
