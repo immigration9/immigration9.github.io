@@ -168,6 +168,9 @@ class Subscriber {
   constructor(name) {
     this.name = name;
   }
+  /**
+   * `readNews`: function to be registered when the Observable is ready
+   */
   readNews = (news) => {
     console.log(`${this.name}: I was reading ${news}`);
   }
