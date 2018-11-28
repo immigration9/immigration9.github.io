@@ -66,6 +66,99 @@ test('object assignment', () => {
   expect(data).toEqual({one: 1, two: 2});
 })
 ```
-`test` 함수는 타이틀과 콜백함수를 받는다. 콜백함수에는 
+`test` 함수는 타이틀과 콜백함수를 받는다. 콜백함수에는 `expect` 함수가 호출되었는데, 호출 후 뒤에 오는 값 (`toBe`, `toEqual`, `not.toBe`) 등과의 기댓값을 비교한다.
 
-// TODO from Here
+### 신뢰성 향상
+테스트에서 올바른 답변이 아닌 경우를 확인해보고 싶을 경우, 별도로 처리를 해줄 수 있다. 일반적으로 `undefined`, `null`, 그리고 `false` 셋중 하나가 쓰이는데, 셋 모두 별도로 커버할 수 있다.
+* `toBeNull`: `null` 확인
+* `toBeUndefined`: `undefined` 확인
+* `toBeDefined`: `toBeUndefined`의 반대
+* `toBeTruthy`: `if` 문에서 `true`
+* `toBeFalsy`: `if` 문에서 `false`
+
+아래 예제를 통해 `null`과 0이 어떤 항목에 속하는지 알 수 있다.
+```javascript
+test('null test', () => {
+  const n = null;
+  expect(n).toBeNull();
+  expect(n).toBeDefined();
+  expect(n).not.toBeUndefined();
+  expect(n).not.toBeTruthy();
+  expect(n).toBeFalsy();
+});
+
+test('zero test', () => {
+  const z = 0;
+  expect(z).not.toBeNull();
+  expect(z).toBeDefined();
+  expect(z).not.toBeUndefined();
+  expect(z).not.toBeTruthy();
+  expect(z).toBeFalsy();
+});
+```
+
+### Numbers
+숫자 값을 비교함에 있어서는 아래와 같은 함수들을 사용할 수 있다.
+* `toBe` / `toEqual`: 숫자에 있어서 둘은 '같음'을 뜻한다. (동일)
+* `toBeGreaterThan`: (비교대상)보다 크다
+* `toBeGreaterThanOrEqual`: (비교대상)보다 크거나 같다
+* `toBeLessThan`: (비교대상)보다 작다
+* `toBelessThanOrEqual`: (비교대상)보다 작거나 같다
+
+* `toBeCloseTo`: 소수값에 대해서 테스트를 진행할 경우 근사값을 기반으로 테스팅할 수 있다.
+
+### Strings
+* `toMatch`: 정규식과의 비교값을 도출한다.
+```javascript
+test('there is no I in team', () => {
+  expect('team').not.toMatch(/I/);
+});
+
+test('but there is a "stop" in Christoph', () => {
+  expect('Christoph').toMatch(/stop/);
+});
+```
+
+### Arrays
+* `toContain`: 행렬 안에 특정 값이 있는지를 확인할 수 있다.
+```javascript
+const shoppingList = [
+  'diapers',
+  'kleenex',
+  'trash bags',
+  'paper towels',
+  'beer',
+];
+
+test('shopping list test', () => {
+  expect(shoppingList).toContain('beer');
+})
+```
+
+## 비동기 코드 테스팅
+자바스크립트에서는 코드가 비동기로 실행되는 것이 일반적이다. Jest에서는 다양한 방법을 이용하여 비동기 코드를 테스팅할 수 있다.
+
+### 콜백함수를 통한 테스팅
+가장 일반적인 방법으로 콜백함수를 호출할 수 있다. 일반적으로, Jest 테스팅은 실행을 마치면 종료된다. 그 뜻은 아래와 같이 구성된 코드는 동작하지 않는다는 것이다.
+```javascript
+test('the data is peanut butter', () => {
+  function callback(data) {
+    expect(data).toBe('peanut butter');
+  }
+
+  fetchData(callback);
+});
+```
+여기서 문제는 `fetchData`를 호출한 다음에 콜백 함수를 호출하지 않고 테스트가 바로 끝나버린다는 것이다.
+종료 지점을 지정해줘야 하기 때문에, 아래와 같이 코드를 수정한다.
+```javascript
+test('the data is peanut butter', done => {
+  function callback(data) {
+    expect(data).toBe('peanut butter');
+    done();
+  }
+
+  fetchData(callback);
+});
+```
+`done` 함수를 호출함으로써 Jest에게 직접 종료 지점을 알려줄 수 있다.
