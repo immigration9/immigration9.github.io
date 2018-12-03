@@ -7,7 +7,9 @@ categories: "algorithms"
 
 ## Reference
 본 내용은 CS Dojo 채널의 'Using Dynamic Programming to Solve a Real-World Problem!' 강의를 공부하기 위해 정리한 것.
+
 [Using Dynamic Programming to Solve a Real-World Problem!][reference-01]
+
 [Example Github][reference-02]
 
 ## 개요
@@ -97,4 +99,5 @@ function helper(s1, s2, i1, i2, memo) {
 ```
 
 [reference-01][https://www.youtube.com/watch?v=4SP_AY7GGxw]
+
 [reference-02][https://github.com/ykdojo/text_difference_finder/blob/master/text_difference.js]
