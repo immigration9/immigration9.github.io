@@ -98,6 +98,6 @@ function helper(s1, s2, i1, i2, memo) {
 }
 ```
 
-[reference-01][https://www.youtube.com/watch?v=4SP_AY7GGxw]
+[reference-01]:https://www.youtube.com/watch?v=4SP_AY7GGxw
 
-[reference-02][https://github.com/ykdojo/text_difference_finder/blob/master/text_difference.js]
+[reference-02]:https://github.com/ykdojo/text_difference_finder/blob/master/text_difference.js
