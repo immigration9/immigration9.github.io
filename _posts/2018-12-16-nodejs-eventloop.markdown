@@ -134,4 +134,5 @@ function MyEmitter() {
 }
 ```
 `setImmediate`는 현재 poll 단계가 완료되면 스크립트가 실행되도록 설계되어있다. 이어진 순회나 Event loop의 'tick'에서 실행된다. (`process.nextTick()`과 이름이 반대라서 좀 헷갈린다)
+
 [reference-01]:https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/
