@@ -19,5 +19,6 @@ published: true
 1. NPM build 시에 webpack watch 모드가 node_modules 변경 인식 불가
 별도의 라이브러리를 만들어 소스를 관리하고 있기 때문에, node_modules를 직접 수정하는 일이 잦다. 근데 문제가, node_modules에 변경되는 사항은 watch 모드가 인식하지 못하는 문제를 발견하였다.
 찾아보니, Linux 시스템의 경우 inotify 갯수의 제한 기본값이 8192로 맞춰져있기 때문이였다. (file descriptor와 같다고 보면 될 것 같다)
-아래 간단한 코드를 넣고 실행해보니 잘 된다. 땡큐 깃헙!ㄴ
+아래 간단한 코드를 넣고 실행해보니 잘 된다. 땡큐 깃헙!
+
 https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers

@@ -1,0 +1,107 @@
+---
+layout: post
+title:  "Docker 101"
+date:   2018-12-26 14:00:00 +09:00
+categories: "docker"
+published: true
+---
+
+## Docker for Windows / Mac
+* Docker Client (Docker CLI) -> Docker Server (Docker Daemon)
+
+## Installation
+1. Install Docker
+2. Install Docker-Compose
++ Docker on non-root user: https://docs.docker.com/install/linux/linux-postinstall/
+
+## How it works
+`docker run hello-world` -> Docker Client -> Docker Server (image cache가 있는지 먼저 확인해본다) -> 없으면 Docker Hub 접근 -> 향후에는 image cache 에서 확인
+
+## Container란?
+
+일반적인 운영체제의 경로: Program -> System Call -> Kernel -> CPU / Memory / Hard Disk
+System call: 동작 중인 프로그램이 하드웨어의 일부분과 상호작용하기 위해 요청하는 것
+
+## 왜 필요한가?
+만약에 프로그램을 하나의 버전으로만 설치할 수 있다고 가정하자. Python은 2만 깔 수 있는데, 3도 필요하다면? 
+운영체제의 기능 중 하나인 namespacing 기능을 사용한다. 세그먼트를 생성해서 각각 해당 버전을 설치한다.
+커널이 시스템 콜을 받으면 해당 세그먼트를 확인하여 호출한다.
+
+* Namespacing: 프로세스별로 자원을 독립할 수 있다. (Processes / Inter Process Communication / Hard drive / Network / Users / Hostnames)
+* Control Groups(cgroups): 프로세스별로 사용되는 자원의 양을 제한할 수 있다. (Memory / CPU Usage / HD i/o / Network Bandwidth)
+
+***** container_explained.png
+
+## busybox with overriding command
+`docker run busybox ls`
+* docker run (image) (overriding command)
+
+## Container Lifecycle
+* docker run의 원리
+`docker run` = `docker create` + `docker start` (-a 를 넣어야 쉘에서 확인 가능하다)
+
+* 이미 종료된 docker container를 다시 실행하고자 한다면
+`docker start -a (container id)`
+
+* 종료된 컨테이너, 이미지를 제거하고자 한다면 (전부다)
+`docker system prune`
+```shell
+WARNING! This will remove:
+        - all stopped containers
+        - all networks not used by at least one container
+        - all dangling images
+        - all dangling build cache
+Are you sure you want to continue? [y/N] y
+```
+
+* 로깅하고자 할 때
+다시 실행하는 것이 아니라, 그냥 로그만 보여준다. 디버깅할 때 쓰자
+`docker log (container id)`
+
+* Container를 정지하고자 할 때
+`docker stop (container id)`
+`docker kill (container id)`
+
+뭐가 다른걸까?
+stop의 경우, SIGTERM을 전송한다. 프로세스를 종료하는데, 정리하는 과정을 제공한다. (cleanup)
+kill의 경우, SIGKILL을 전송한다. 프로세스를 종료하는데, 다른 과정들을 제공하지 않는다.
+
+Docker의 경우 10초 안에 해결되지 않으면 바로 kill을 호출한다.
+
+## Redis와 Docker를 사용해보자
+Redis는 Server와 CLI를 모두 사용하고자 하는데, container가 일반적으로 하나의 프로세스만을 수행하기 때문에, 동시에 두 가지를 실행하는 것이 어렵다.
+`docker run redis`
+
+해결하기 위해서 exec 명령어를 이용하여 container 내부에서 별도의 명령을 실행한다.
+`docker exec -it (container id) (command)`
+docker 실행 (container에 명령 추가) (id) (실행될 명령어)
+
+`-it`란 무엇인가?
+`-i`: 새로운 명령어를 입력하면, 해당 컨테이너의 STDIN에 연결되었으면 한다.
+`-t`: tty연결.
+
+`docker exec -it (container id) sh` -> terminal 연결
+
+
+## Dockerfile로 image만들기
+Dockerfile -> Docker Client -> Docker Server -> 사용 가능한 이미지
+
+1. Base image 설정
+2. 추가 프로그램 설치를 위한 명령어 실행
+3. 시작시에 실행할 명령 설정
+
+redis-server를 실행하는 이미지를 만들어보자
+
+```Dockerfile
+FROM alpine
+
+RUN apk add --update redis
+
+CMD ["redis-server"]
+```
+
+빌드 작업은 `docker build .` 를 하면 된다.
+실행은 `docker run (image id)`.
+
+
+
