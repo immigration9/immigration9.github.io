@@ -1,10 +1,32 @@
-## 설치
+
+## Kubernetes란?
+무엇인가: 여러개의 장비 위에 여러개의 컨테이너를 돌리고 있는 시스템을 위해 사용
+왜 사용하는가: 다른 이미지를 가지고 있는 여러개의 컨테이너를 돌려야할 때 사용
+
+## 과정
+Minikube로 설치
+
+kubectl: 노드에 있는 컨테이너 관리 (k8s master와 커뮤니케이션)
+minikube: VM 자체를 관리 (해당 VM에 싱글 노드 실행)
+
 1. kubectl 설치: https://kubernetes.io/docs/tasks/tools/install-kubectl/
 2. Virtualbox 설치: https://www.virtualbox.org/wiki/Downloads
 3. minikube 설치: https://github.com/kubernetes/minikube/releases
 
 * Minikube가 제공하는 Kubernetes 기능들
 DNS / NodePorts / ConfigMaps & Secrets / Dashboards / Container Runtime(Docker) / Container Network Interface 활성화 / Ingress
+
+## 설치
+MacOS 기준
+1. kubectl: `brew install kubectl`
+2. Virtualbox 설치
+3. minikube: `brew cask install minikube`
+4. minikube 시작: `minikube start`
+
+* k8s master 상태 확인: `kubectl cluster-info`
+
+## 목표
+Get the multi-client image running on our local kubernetes cluster running as a container
 
 ## 실행
 ```shell
