@@ -104,3 +104,65 @@ Stopping "minikube"...
 ## Kubernetes로 시작하기
 `mkdir simplek8s`
 
+* Pod란: Container들의 그룹핑 (k8s에는 container만 만든다는 것이 없다. 최소 단위가 Pod)
+* Pod에 담아야 하는 항목들: 굉장히 결합도가 높은 container들 끼리의 묶음. 정말 묶지 않으면 안될 정도
+
+* Service란: k8s cluster의 네트워킹 설정
+- ClusterIP / NodePort / LoadBalancer / Ingress
+- NodePort란: Container를 외부에 노출 (개발용도로만 적합, 프로덕션에서는 되도록 사용하지 않음)
+
+`client-pod.yaml`
+```yaml
+apiVersion: v1
+kind: Pod  
+metadata:
+  name: client-pod
+  labels:
+    component: web
+spec:
+  containers:
+    - name: client
+      image: stephengrider/multi-client
+      ports:
+        - containerPort: 3000
+```
+
+`client-node-port.yaml`
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-node-port
+spec:
+  type: NodePort
+  ports:
+    - port: 3050
+      targetPort: 3000
+      nodePort: 31515
+  selector:
+    component: web
+```
+
+* label matching이 되어야 하기 때문에, `labels` 항목과 `selector` 항목의 key value가 맞어야 한다.
+
+NodePort Service의 구성
+- port: `multi-client` pod를 필요로 하는 다른 pod
+- targetPort: `multi-client` pod
+- nodePort: 30000-32767 사이의 랜덤포트 (외부 머신에서 접속). 포트를 별도로 지정하지 않으면 랜덤으로 들어간다.
+
+
+## kubectl을 이용하여 Pod 올리기
+`kubectl apply -f (filename)`
+
+* apply: cluster의 현재 설정을 변경
+* -f (filename): 설정이 변경될 파일 명칭 지정
+
+`kubectl get pods`: pod list
+`kubectl get services`: service list
+
+`kubectl get pods`의 결과물을 가지고 localhost:(nodeport)로 접속하고자 하면, 안된다.
+
+`kube-proxy`를 통해서 해당 VM에 접근해야하기 때문이다.
+
+minikube가 그 정보를 가지고 있기 때문에 `minikube ip`를 입력하여 ip주소를 가져온 뒤 사용하면 된다.
+ex) 192.168.99.100:31515
