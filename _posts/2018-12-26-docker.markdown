@@ -3,8 +3,11 @@ layout: post
 title:  "Docker 101"
 date:   2018-12-26 14:00:00 +09:00
 categories: "docker"
-published: true
+published: false
 ---
+
+## Disclaimer
+본 내용은 Stephen Grider의 Docker and Kubernetes 강의를 보면서 공부하기 위해 요약한 것임.
 
 ## Docker for Windows / Mac
 * Docker Client (Docker CLI) -> Docker Server (Docker Daemon)

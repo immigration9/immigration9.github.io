@@ -166,3 +166,18 @@ NodePort Service의 구성
 
 minikube가 그 정보를 가지고 있기 때문에 `minikube ip`를 입력하여 ip주소를 가져온 뒤 사용하면 된다.
 ex) 192.168.99.100:31515
+
+`minikube ssh`: minikube 환경에 접속
+
+Deployment file이 적용되면 master로 전송된다. (kube-apiserver).
+master(kube-apiserver)는 deployment file을 읽은 뒤 작업을 수행한다.
+
+## 용어 정리
+* Kubernetes: 컨테이너화된 앱을 배포
+* Nodes: Container들을 실행시키는 개별 머신 (혹은 VM)
+* Masters: Node를 managegㅏ기 위한 프로그램을 갖추고 있는 개별 머신 (혹은 VM)
+* Kubernetes는 이미지를 빌드하지 않음. 다른 곳에서 가져 옴
+* Deploy를 하기 위해서는, master에 deploy 설정 파일을 전달한다.
+* Master는 예상되는 상태에 부응하기 위해 끊임없이 동작한다.
+
+## declarative vs imperative deployment
