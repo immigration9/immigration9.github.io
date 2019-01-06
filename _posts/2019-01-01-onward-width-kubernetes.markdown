@@ -2,7 +2,7 @@
 layout: post
 title:  "Kubernetes 101"
 date:   2019-01-01 10:00:00 +09:00
-categories: "docker"
+categories: "kubernetes"
 published: true
 ---
 
