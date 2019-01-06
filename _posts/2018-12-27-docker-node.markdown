@@ -3,7 +3,7 @@ layout: post
 title:  "Docker로 Node App 띄우기"
 date:   2018-12-27 22:00:00 +09:00
 categories: "docker"
-published: false
+published: true
 ---
 
 

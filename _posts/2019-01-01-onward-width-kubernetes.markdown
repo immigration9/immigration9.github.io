@@ -1,3 +1,10 @@
+---
+layout: post
+title:  "Kubernetes 101"
+date:   2019-01-01 10:00:00 +09:00
+categories: "docker"
+published: true
+---
 
 ## Kubernetes란?
 무엇인가: 여러개의 장비 위에 여러개의 컨테이너를 돌리고 있는 시스템을 위해 사용
