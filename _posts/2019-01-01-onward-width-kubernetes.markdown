@@ -188,3 +188,54 @@ master(kube-apiserver)는 deployment file을 읽은 뒤 작업을 수행한다.
 * Master는 예상되는 상태에 부응하기 위해 끊임없이 동작한다.
 
 ## declarative vs imperative deployment
+
+## 설정 변경의 기준
+kubernetes 설정 파일의 경우, `name`과 `type` 항목을 기준으로 설정 파일을 업데이트 한다.
+두 값들이 같을 경우, 다른 항목의 변경은 덮어쓰기 형식으로 적용된다. (image, toleration, activeDeadlineSeconds와 같은 지표들만 변경이 가능하다)
+
+### 객체에 대한 상세 정보 가져오기
+`kubectl describe (type: eg. pods) (name: client-pod)`
+
+### 변경할 수 없는 Pod 설정을 변경하는 방법
+* Deployment: 동일한 Pods들을 관리한다. 모두 동일한 설정값을 가지고 있으며, 정확한 숫자가 존재하도록 관리한다.
+- Pod 대신에 사용할 수 있다. Pods는 일반적으로 프로덕션 환경에서 잘 사용되지 않는다.
+- Pod들의 상태를 모니터링하고, 필요시 업데이트도 진행한다.
+
+Pod Template을 기준으로 Pod를 생성한다.
+
+## 기존 설정 파일 삭제
+`kubectl delete -f (config file)`
+상당히 명령적인 방식인데 (선언적인 방식과 반대인), 일단 삭제할 때는 이 방법 밖엔 없다.
+
+## Deployment 가져오기
+`kubectl get deployments`
+* DESIRED: deployment 설정에서 설정한 replica 숫자
+* CURRENT: 현재 돌아가는 Pod 수
+* UP-TO-DATE: 설정 파일을 변경하면 일시적으로 기존의 Pod들이 out-of-date 상태가 된다. 그러면 숫자가 떨어졌다가, 설정이 반영되면 다시 올라온다.
+* AVAILABLE: 잘 돌아가고 있는 Pod의 수
+
+## Deployment에 대해
+내용이 변경되면 기존의 Pod를 삭제하고 새로운걸 띄운다.
+
+
+## Service는 왜 사용할까?
+모든 Pod들은 다 개별적인 내부 IP를 가져간다. 내부 IP는 어떤 방식으로던 간에 변경될 수 있다.
+Pod는 유기적이기 때문에 언제 사라질 수도, 교체될 수도 있다. 이렇게 되면 IP는 변경된다.
+* 결론: EIP쓰는 이유와 같다. **Service는 Pod를 Selector를 기준으로 모니터링하고, 포트를 매핑한다.**
+
+## Deploy시 image 버전 업데이트
+단순히 latest는 자동으로 업데이트 되지 않는다. (kubernetes issue #33664 번 참조)
+그렇기 때문에, kubectl 명령어를 통해 deployment가 새로운 이미지 버전을 사용하도록 강제한다.
+
+1. docker build를 먼저 진행하자
+```
+docker build -t immigration9/multi-client:v2 ./
+docker push immigration9/multi-client:v2
+```
+2. kubectl에 최신 이미지를 사용하도록 명령하자
+`kubectl set image deployment/client-deployment client=immigration9/multi-client:v2`
+kubectl set (변경하고자 하는 속성. eg. image) (객체 타입. eg. deployment) / (객체 이름) (컨테이너명)=(풀 이미지명)
+
+이제 `kubectl get pods`를 하면 이미지가 업데이트 되며 Pod들이 재생성 된 것을 확인할 수 있다.
+
+
