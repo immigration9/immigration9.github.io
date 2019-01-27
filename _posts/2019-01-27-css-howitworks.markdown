@@ -54,3 +54,10 @@ CSS는 다음과 같이 구성되어 있다.
 
 왠만하면 `!important`는 쓰지 말자. maintainability를 해친다.
 
+
+## Inheritance(상속)
+1. 상속은 부모 element로부터의 속성을 자식 element가 사용할 수 있게 해준다.
+2. Text와 관련된 속성들은 상속을 받는다 (`font-family`, `font-size`, `color`)
+3. 선언값(declared value)이 아닌, 계산값(computed value)가 상속된다.
+4. 상속은 해당 property에 대한 값이 선언되어 있지 않는 경우에만 발생한다.
+5. `inherit` 키워드도 별도로 존재한다. 

@@ -1,0 +1,132 @@
+---
+layout: post
+title:  "Studying Sass Again"
+date:   2019-01-28 08:00:00 +09:00
+categories: "sass"
+published: true
+---
+
+## Sass 기본 정리
+
+## Variables
+```scss
+* {
+  margin: 0;
+  padding: 0;
+}
+
+$color-primary: #f9ed69;
+
+nav {
+  margin: 30px;
+  background-color: $color-primary;
+}
+```
+
+
+## Nesting
+Nesting을 이용하여 pseudo-class 사용 간편화
+```scss
+.btn-main {
+  &:link {
+    background-color: $color-secondary;
+  }
+  
+  &:hover {
+    background-color: darken($color-secondary, 15%);
+  }
+}
+```
+* 여기서 `darken`, `lighten`은 SASS 문법으로, 색상을 해당 퍼센트 만큼 조정한다.
+
+
+## Mixin
+Mixin은 미리 정의해놓고 나중에 사용하는 것이라고 보면 된다.
+
+```scss
+@mixin clearfix {
+  &::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+}
+
+nav {
+  margin: 30px;
+  background-color: $color-primary;
+  
+  @include clearfix;
+}
+```
+
+Mixin에 argument 전달할 경우
+```scss
+
+@mixin style-link-text($color) {
+  text-decoration: none;
+  text-transform: uppercase;
+  color: $color;
+}
+    
+a {
+  @include style-link-text($color-text-dark);
+}
+```
+
+
+## Extends
+
+Placeholder를 이용해서 중복된 코드를 대체할 수 있다.
+```scss
+
+%btn-placeholder {
+  padding: 10px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 100px;
+  
+  width: $width-button;
+  @include style-link-text($color-text-light);
+}
+
+
+.btn-main {
+  &:link {
+    @extend %btn-placeholder;
+    background-color: $color-secondary;
+  }
+}
+
+.btn-hot {
+  &:link {
+    @extend %btn-placeholder;
+    background-color: $color-secondary;
+  }
+}
+
+```
+
+위 상황과 같이 동일한 `btn-placeholder`를 중복해서 사용할 경우 유용하다. 이렇게 하지 않고 CSS로 구현하고자 한다면 아래와 같이 중복 코드가 발생한다.
+
+```css
+.btn-main:link,
+.btn-hot:link {
+  padding: 10px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 100px;
+}
+
+.btn-main:hover {
+  ...pass
+}
+
+.btn-hot:hover {
+  ...pass
+}
+```
+
+그렇다면 mixin과는 무엇이 다를까? mixin으로 할 경우, 동일한 코드가 두 번 생성되는 반면, placeholder로 할 경우 그 원리가 반대로 돌아간다. `@extend`가 사용된 코드가 반대로 placeholder로 들어가서, 중복된 코드를 방지할 수 있다.
+
+다만, 헷갈리면 그냥 mixin을 쓰는게 낫다. 정말 필요한 경우가 아니고서야...
