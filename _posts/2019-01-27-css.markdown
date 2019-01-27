@@ -1,0 +1,126 @@
+---
+layout: post
+title:  "CSS Basics & Animations"
+date:   2019-01-27 12:20:00 +09:00
+categories: "css"
+published: true
+---
+
+## 배경 이미지 설정
+
+```css
+.header {
+  background-image: linear-gradient(
+    to right bottom, 
+    rgba(126, 213, 111, 0.6), 
+    rgba(40, 180, 131, 0.6)), 
+    url(../img/some-image.jpg);
+  /*
+    `background-size: cover` will cover the background viewport. (fitting the aspect);
+  */
+  background-size: cover;
+  background-position: top;
+
+  position: relative;
+}
+```
+
+`background-image`는 순서에 맞춰 여러개를 layer처럼 표현할 수 있다. 
+`background-size`는 이미지를 viewport내에 어떻게 표현할지를 결정한다. `cover`로 맞춰질 경우 비율에 맞춰 이미지를 끼워 넣는다.
+`background-size`가 결정되면, `background-position`을 통해, 이미지의 어떤 부분부터 보여질지 선택할 수 있다. `top / bottom / left / right` 중에 선택을 하면 해당 부분부터 이미지가 시작된다.
+
+
+## 항목을 중앙에 배치하며 element를 정중앙에 배치
+```css
+.text-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  text-align: center;
+}
+```
+`postion / top / left`를 통해 50%를 설정해 놓으면 50% 지점부터 시작하기 때문에, 별도의 `transform:translate()`항목을 통해 위치를 재조정해줘야 한다.
+
+
+## CSS 변화에 시간값 부여
+```css
+.btn:visited {
+  transition: all .2s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+```
+`transition` 항목을 통해 animation에 duration을 줄 수 있다. `hover`와 `active`와 같은 항목이 별도로 있을 경우, 각각의 요소에 넣지 말고, initial에 해당하는 element에 `transition: all`을 선언하면 된다.
+
+
+## CSS Animations
+```css
+@keyframes moveInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+
+  80% {
+    transform: translateX(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0);
+  }
+}
+```
+
+`keyframes`를 이용하여 animation을 설정할 수 있다. animation은 0%부터 시작하여 100%까지 세팅을 할 수 있다. 선언된 animation은 css-selector에서 `animation*` 태그를 통해 사용할 수 있다.
+
+```css
+
+.heading-primary-main {
+  display: block;
+  font-size: 60px;
+  font-weight: 400;
+  letter-spacing: 35px;
+
+  animation-name: moveInLeft;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  
+  /*
+  animation-iteration-count: 3;
+  animation-delay: 3s;
+  */
+}
+```
+`*-name`과 `*-duration`을 사용하면 명칭과 지속시간을 설정할 수 있으며, `*-delay`를 설정하면 시작되는 시점을 결정할 수 있다.
+
+
+## ::after pseudo-element를 이용하여 디자인 다양화
+`::after`와 같은 pseudo-element는 특정 element뒤에 다른 element가 오게 함으로써 유용하게 사용할 수 있다. 구체적으로 어디 쓰일까 싶을 수 있는데, `::after`를 설정하면 해당 element의 내부에 새로운 항목을 추가할 수 있다. 예를들어, `hover`시에 일시적으로 버튼 크기를 크게 보이는 효과를 넣고자 하는 경우 아래와 같이 설정하면 기존 버튼을 건드리지 않고 효과를 줄 수 있다.
+
+```css
+.btn::after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border-radius: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transition: all .4s;
+}
+
+.btn:hover::after {
+  transform: scaleX(1.2) scaleY(1.4);
+  opacity: 0;
+}
+```
+
+이렇게 하면 `btn` class를 hover시에 일시적으로 `::after`가 scale되며 animation 완료 후 opacity 0으로 돌아와 화면상에서 사라지는 효과를 볼 수 있다.
