@@ -61,3 +61,16 @@ CSS는 다음과 같이 구성되어 있다.
 3. 선언값(declared value)이 아닌, 계산값(computed value)가 상속된다.
 4. 상속은 해당 property에 대한 값이 선언되어 있지 않는 경우에만 발생한다.
 5. `inherit` 키워드도 별도로 존재한다. 
+
+
+## BEM
+Block Element Modifier
+* Block: 개별적으로도 의미를 갖는 컴포넌트 (btn, recipe 등)
+* Element: Block의 일부 중 개별적인 의미를 갖지 못하는 것 (recipe__info 에서 info와 같이)
+* Modifier: Block이나 Element의 다른 버전 (btn--round에서 round와 같이)
+
+
+## The 7-1 Pattern
+Sass partial 파일들을 위해 7개의 다른 폴더와, 모든 파일들을 컴파일된 CSS 스타일시트로 import하기 위한 메인 Sass 파일
+
+base / components / layout / pages / themes / abstracts / vendors
