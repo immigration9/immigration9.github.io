@@ -130,3 +130,40 @@ Placeholder를 이용해서 중복된 코드를 대체할 수 있다.
 그렇다면 mixin과는 무엇이 다를까? mixin으로 할 경우, 동일한 코드가 두 번 생성되는 반면, placeholder로 할 경우 그 원리가 반대로 돌아간다. `@extend`가 사용된 코드가 반대로 placeholder로 들어가서, 중복된 코드를 방지할 수 있다.
 
 다만, 헷갈리면 그냥 mixin을 쓰는게 낫다. 정말 필요한 경우가 아니고서야...
+
+
+## 추가적인 Nesting
+놀랍게도 아래와 같이 nesting을 변경할 수 있다.
+
+```scss
+
+.header {
+  height: 95vh;
+  background-image: linear-gradient(
+    to right bottom, 
+    rgba($color-primary-light, 0.6), 
+    rgba($color-primary-dark, 0.6)), 
+    url(../img/hero.jpg);
+
+  /** 
+  * `.header__logo-box` 와 같다
+  **/
+  &__logo-box {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+
+  &__logo {
+    height: 35px; 
+  }
+
+```
+여기서 나온 `&__logo-box`는 기존에 선언하였던 `.header__logo-box`와 같다고 보면 된다.
+
+
+## Partial Import
+Compile되긴 원하지 않고, `import`용도로만 사용하고 싶다면, 앞에 _를 붙히면 된다. `_base.scss`
+
+불러올 때는 `@import 'base` (_와 scss는 필요없음)
+
