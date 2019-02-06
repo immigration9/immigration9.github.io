@@ -1,3 +1,10 @@
+---
+layout: post
+title:  "Responsive layout"
+date:   2019-02-01 08:00:00 +09:00
+categories: "css"
+published: true
+---
 
 
 ## max-width (desktop first) / min-width (mobile first)
