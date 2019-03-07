@@ -11,3 +11,5 @@ published: false
 * module.d.ts: https://www.typescriptlang.org/docs/handbook/declaration-files/templates/module-d-ts.html
 
 * Developer Park Kyungwook: https://kyungw00k.github.io/
+  
+* React-Hooks Typescript: https://medium.com/@jrwebdev/react-hooks-in-typescript-88fce7001d0d
