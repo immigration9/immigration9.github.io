@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "React: Server Side Rendering"
+date:   2019-03-06 23:00:00 +09:00
+categories: "react"
+published: true
+---
+
+API Server -> Rendering Server 구조
+
+ReactDOM.renderToString()
+
+
+```
+/Users/immigration9/git/ssr-react/server/src/index.js:9
+  const content = renderToString(<Home/>);
+                                 ^
+
+SyntaxError: Unexpected token <
+    at createScript (vm.js:80:10)
+    at Object.runInThisContext (vm.js:139:10)
+    at Module._compile (module.js:617:28)
+    at Object.Module._extensions..js (module.js:664:10)
+    at Module.load (module.js:566:32)
+    at tryModuleLoad (module.js:506:12)
+    at Function.Module._load (module.js:498:3)
+    at Function.Module.runMain (module.js:694:10)
+    at startup (bootstrap_node.js:204:16)
+    at bootstrap_node.js:625:3
+```
+
+Home.js -> index.js -> Webpack -> Babel -> bundle.js (Run with Node);

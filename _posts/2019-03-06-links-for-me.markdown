@@ -9,3 +9,5 @@ published: false
 * LocalStorage with Typescript: https://medium.com/rainist-engineering/safe-localstorage-using-typescdript-eac147f59ae
 
 * module.d.ts: https://www.typescriptlang.org/docs/handbook/declaration-files/templates/module-d-ts.html
+
+* Developer Park Kyungwook: https://kyungw00k.github.io/
