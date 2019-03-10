@@ -127,3 +127,14 @@ app.get('*', (req, res) => {
 ```
 기존의 `/`만 있을 경우, 최상단 Route를 제외하고 다른 경우는 읽히지 않을 것이다. 아스테리스크로 처리해주자.
 
+
+## Redux 도입
+1. Browser vs Server configuration이 다름: Browser위한 Store와 Server를 위한 Store를 두 개 가질 예정
+2. Authentication 문제는 서버에서 대뤄져야 함. 서버에서는 Cookie를 접근하기가 어렵다.
+3. 서버 상에서 최초의 데이터를 불러오는 Action Creator가 언제 완료되는지를 감지해야함
+4. 브라우저 상에서 State rehydration이 필요
+
+
+
+1. URL 기반으로, 어떤 컴포넌트가 렌더 되어야 하는지 확인
+2. 컴포넌트들에 부착되어 있는 `loadData` 메소드 호출
