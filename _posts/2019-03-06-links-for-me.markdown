@@ -13,3 +13,5 @@ published: false
 * Developer Park Kyungwook: https://kyungw00k.github.io/
   
 * React-Hooks Typescript: https://medium.com/@jrwebdev/react-hooks-in-typescript-88fce7001d0d
+
+* Go / Gin / React: https://dev.to/codehakase/building-a-web-app-with-go-gin-and-react-5ke
