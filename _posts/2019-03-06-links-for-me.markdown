@@ -15,3 +15,5 @@ published: false
 * React-Hooks Typescript: https://medium.com/@jrwebdev/react-hooks-in-typescript-88fce7001d0d
 
 * Go / Gin / React: https://dev.to/codehakase/building-a-web-app-with-go-gin-and-react-5ke
+
+* Setting up Typescript with Babel & Webpack: https://medium.com/@francesco.agnoletto/how-to-set-up-typescript-with-babel-and-webpack-6fba1b6e72d5
