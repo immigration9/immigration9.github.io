@@ -17,3 +17,5 @@ published: false
 * Go / Gin / React: https://dev.to/codehakase/building-a-web-app-with-go-gin-and-react-5ke
 
 * Setting up Typescript with Babel & Webpack: https://medium.com/@francesco.agnoletto/how-to-set-up-typescript-with-babel-and-webpack-6fba1b6e72d5
+
+* Applying Typescript (Must read): http://artsy.github.io/blog/2017/11/27/Babel-7-and-TypeScript/
