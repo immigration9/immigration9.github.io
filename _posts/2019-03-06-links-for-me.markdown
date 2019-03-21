@@ -19,3 +19,5 @@ published: false
 * Setting up Typescript with Babel & Webpack: https://medium.com/@francesco.agnoletto/how-to-set-up-typescript-with-babel-and-webpack-6fba1b6e72d5
 
 * Applying Typescript (Must read): http://artsy.github.io/blog/2017/11/27/Babel-7-and-TypeScript/
+
+* Understanding Mixins in Javascript: https://blog.bitsrc.io/understanding-mixins-in-javascript-de5d3e02b466
