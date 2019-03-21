@@ -21,3 +21,5 @@ published: false
 * Applying Typescript (Must read): http://artsy.github.io/blog/2017/11/27/Babel-7-and-TypeScript/
 
 * Understanding Mixins in Javascript: https://blog.bitsrc.io/understanding-mixins-in-javascript-de5d3e02b466
+
+* Typescript Function: https://hyunseob.github.io/2016/11/18/typescript-function/
