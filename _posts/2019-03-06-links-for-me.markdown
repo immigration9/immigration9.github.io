@@ -23,3 +23,5 @@ published: false
 * Understanding Mixins in Javascript: https://blog.bitsrc.io/understanding-mixins-in-javascript-de5d3e02b466
 
 * Typescript Function: https://hyunseob.github.io/2016/11/18/typescript-function/
+
+* React-Redux Typescript Guide: https://github.com/piotrwitek/react-redux-typescript-guide/blob/master/README.md
