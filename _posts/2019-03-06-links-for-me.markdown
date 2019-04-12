@@ -25,3 +25,6 @@ published: false
 * Typescript Function: https://hyunseob.github.io/2016/11/18/typescript-function/
 
 * React-Redux Typescript Guide: https://github.com/piotrwitek/react-redux-typescript-guide/blob/master/README.md
+
+## Start from Here. Create your own React
+1. babel-plugin-transform-react-jsx: https://github.com/babel/babel/blob/master/packages/babel-plugin-transform-react-jsx/src/index.js

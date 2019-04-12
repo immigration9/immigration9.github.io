@@ -53,3 +53,37 @@ const gen = shopping();
 gen.next(); // leaving our house
 gen.next('groceries') ; // leaving the store with groceries
 ```
+
+
+```javascript
+const testingTeam = {
+  lead: 'Amanda',
+  tester: 'Bill'
+}
+
+const engineeringTeam = {
+  testingTeam,
+  size: 3,
+  department: 'Engineering',
+  lead: 'Jill',
+  manager: 'Alex',
+  engineer: 'Dave'
+}
+
+function* TeamIterator(team) {
+  yield team.lead;
+  yield team.manager;
+  yield team.engineer;
+}
+
+function* TestingTeamIterator(team) {
+  yield team.lead;
+  yield team.tester;
+}
+
+const names = [];
+for (let name of Teamiterator(engineeringTeam)) {
+  names.push(name);
+}
+names;
+```
