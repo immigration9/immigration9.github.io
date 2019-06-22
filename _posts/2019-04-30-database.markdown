@@ -1,0 +1,70 @@
+---
+layout: post
+title:  "DB 공부"
+date:   2019-04-30 12:00:00 +09:00
+categories: "database"
+published: false
+---
+
+# 용어 설명
+
+ANSI/ISO SQL
+
+## SQL
+DDL
+DCL
+DML
+DQL
+TCL / DTL
+
+CUD (Insert Update Delete) === DML (Data Manipulation Language)
+AutoCommit - WAS가 처리해준다.
+
+## Relation, Attribute, Tuple
+ANSI 규약은 Relation
+Attribute = Column = 열
+Tuple = Record, Row = 행 (Tuple의 수 => 카디날리티, Cardinality)
+
+Relation은 Table의 부분집합 (중복되는 데이터가 있으면 Table은 되지만 Relation은 되지 않음)
+
+Primary Key
+Foreign Key
+Surrogate Key (대체키): 보안 상의 이유 등으로 특정 값을 Primary Key로 사용할 수 없을 경우 사용.
+
+Unique Key와 Primary Key의 차이는, null을 허용하느냐 마느냐의 문제 (Primary Key는 허용하지 않음)
+
+## Join
+* Cartesian Product (카르테시안 곱): 두 Relation을 조건없이 곱해서 새로운 큰 Relation을 만들어낸다.
+Inner Join - Equal / Semi / Anti join
+Outer Join
+
+NL Join (Nested Loop): 90% 정도를 차지하고 있음
+Hash Join
+Merge Join (Sort Merge Join) 
+
+## DB 사용자, DB Schema
+스키마 - 테이블 / 뷰 / 인덱스 / 프로시저 펑션 패키지 / 시퀀스 / 트리거
+ANSI 규약에 따르면, 한 명의 사용자는 여러개의 스키마를 가질 수 있음
+
+스키마가 없는 유저는 스키마 소유자로부터 권한을 GRANT 받아야 한다.
+* 근데 ORACLE은 한 개의 유저는 한 개의 스키마만을 가질 수 있음. (유저 생성시 스키마가 생김)
+
+
+# DB Architecture
+
+## Oracle DB 기동 단계
+shutdown -> nomount -> mount -> open
+트랜잭션, 더 이상 분해할 수 없는 업무처리의 단위
+
+## Lock
+비관적 락 / 낙관적 락
+블로킹: 한 세션이 다른 세션이 요구하는 자원에 대한 락을 보유하고 있을 경우 발생
+
+## 동시성 제어 (Concurrency Control)
+다수의 사용자가 동시에 사용하여 발생하는 다중 트랜잭션의 상호 간접 작용에서 데이터베이스를 보호해ㅑㅇ 하며, 이를 동시성 제어(Concurrency Control)라 한다.
+락을 사용한 동시성 제어 -> MVCC (Multi-Version Concurrency Control, 다중 버전 동시성 제어)
+
+## SQL Parser
+Soft Parse
+Hard Parse
+
