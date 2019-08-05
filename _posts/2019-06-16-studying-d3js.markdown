@@ -97,3 +97,16 @@ function dataViz(incomingData) {
 `attr()`: class, id 등 DOM element의 속성 변경시 사용
 * 주의: select로 특정 class를 지정했다고 하더라도, append로 추가 생성된 분에 대해서는 attr을 이용하여 별도로 지정해줘야 한다.
 `html()`: 전통적인 DOM element 콘텐츠 접근
+
+### 이외
+`d3.nest()`: 데이터 배열을 key로 구분하여 정리할 수 있다.
+
+```javascript
+/**
+ * 위에 incomingData로 데이터를 받았다고 가정한다. incomingData는 배열로, 각각 user 항목을 가지고 있다.
+ * 아래와 같이 정리하면, nestedTweets는 유저 별로 데이터 값이 정리된다.
+ */
+var nestedTweets = d3.nest()
+                      .key(function (el) { return el.user; })
+                      .entries(incomingData);
+```
