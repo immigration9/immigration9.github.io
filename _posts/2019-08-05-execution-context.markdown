@@ -44,6 +44,7 @@ a = undefined; // 이런걸 하지 말자
 ```
 
 2. Execution Phase
+
 ```javascript
 function b() {
   console.log("Called b!");
