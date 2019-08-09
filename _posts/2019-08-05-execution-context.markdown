@@ -17,6 +17,7 @@ published: true
 - Outer Environment
 
 ## Execution Context: Creation and Hoisting
+
 ```javascript
 b();
 console.log(a);
@@ -38,12 +39,13 @@ Execution Context (Javascript Engine의 작동)는 2개의 Phase를 거치게 �
 - 변수와 함수들을 위해 메모리 공간 할당: 이를 Hoisting이라고 한다.
   - 함수는 메모리에 올라갔고, 변수의 값은 다음 단계에서 실행되기 때문에 Placeholder격으로 `undefined`값이 들어간다.
 * 코딩시에 왠만해선 undefined로 직접적으로 선언하지 말자. 
+
 ```javascript
 var a;
 a = undefined; // 이런걸 하지 말자
 ```
 
-2. Execution Phase
+1. Execution Phase
 
 ```javascript
 function b() {
@@ -85,6 +87,7 @@ a();
 
 ## Functions, Context, and Variable Environments
 * Variable Environment: 변수가 어디 위치한 것인지. (Scope)
+  
 ```javascript
 function b() {
   var myVar;
@@ -102,6 +105,7 @@ console.log(myVar); // 1을 반환한다
 ```
 
 ## The Scope Chain
+
 ```javascript
 function b() {
   console.log(myVar); // 1을 반환한다
@@ -121,6 +125,7 @@ a도 동일하게 Global Execution Context로 Lexical Environment를 갖는다.
 * 이 과정을 Scope Chain이라고 한다. 첫 번째 장소에서 찾지 못하면, 더 아래의 Scope Chain을 찾아서 값을 찾아낸다.
 
 위 코드를 아래와 같이 수정해본다.
+
 ```javascript
 function a() {
 
