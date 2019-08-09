@@ -27,6 +27,7 @@ function b() {
   console.log('Called b');
 }
 ```
+
 b는 실행이 되고, a는 되지만, `undefined`가 반환된다.
 이걸 Hoisting이라고 한다.
 그런데 이 Hoisting이 단순히 선언이 먼저 된다! 라는 식으로 말하기엔 맞지 않다.
@@ -55,6 +56,7 @@ var a = "Hello, World!";
 
 console.log(a);
 ```
+
 위와 같이 구성할 경우, `var a = "Hello, World!";`에서 a 변수에 할당된다.
 
 ## Single Threaded, Synchronous Execution
