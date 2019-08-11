@@ -6,6 +6,110 @@ categories: "html,javascript"
 published: true
 ---
 
-# First Heading
+## DOM이란 무엇일까?
 
-## Second Heading
+Document Object Model, 혹은 DOM은 웹페이지 인터페이스의 한 종류라 할 수 있다. DOM은 프로그램이 페이지의 컨텐츠와 구조와 스타일을 읽고 수정할 수 있도록 해주는 페이지를 위한 API라고 생각하면 될듯하다.
+
+### 웹 페이지는 어떻게 만들어질까?
+
+브라우저가 HTML 다큐먼트로부터 시작하여 Viewport에 페이지를 렌더링하기 위해서는 Critical Rendering Path (CRP)를 거치게 된다. 요약하자면, 그려질 것에 대한 선택을 하는 단계와, 브라우저가 렌더링을 하는 단계로 나누어진다.
+
+DOM의 객체 구조는 "노드 트리"의 형태로 나타난다. 마치 Javascript 객체와 같이, 가장 윗 단에 `<html>` 태그가 존재하며, 그 브랜치와 리프가 붙어 있는 형식이다.
+
+* 하지만 DOM은 기존의 HTML 소스와 반드시 1:1 매칭된다고 할 수 없다. 잘못된 HTML 코드가 들어가 있거나, Javascript로 인하여 수정될 경우, 원 HTML 소스와는 다른 DOM 트리가 그려질 수 있기 때문이다.
+* Browser의 Viewport에 그려지는 것은 DOM이 아니라, Render Tree다. Render Tree는 DOM과 CSSOM을 합친 것이다. -> DOM과 Render Tree의 가장 큰 차이점은, Render Tree는 화면상에 그려지는 것으로만 이루어져 있다는 것이다.
+  * 예를들어, `display: none`과 같은 속성들은 Render Tree에 나타나지 않는다.
+
+* DOM은 Javascript로 변경 가능한, 유효한 HTML을 기반으로 생성되며, psuedo-element는 포함하지 않는다. (hidden element는 포함한다. Render Tree에만 나타나지 않을 뿐).
+
+
+### Critical Rendering Path 이해하기
+
+Critical Rendering Path가 그려지는데는 6가지 과정을 거친다.
+
+1. DOM 트리 생성
+- `html`부터 안에 있는 element들이 생성된다. 
+- Element 안에 nesting되어 있는 element는 Child Node라 명명된다. 또한, 각각의 Node는 해당되는 Element의 속성을 지니고 있다.
+- HTML은 부분적으로 실행될 수 있는 장점을 가지고 있다. (즉, 부분 로딩이 가능). CSS와 Javascript는 전체 페이지의 렌더링을 막을 수 있다.
+
+2. CSSOM 트리 생성
+- CSS Object Model은 DOM과 연관된 스타일 형식이라 할 수 있다.
+- Render Blocking Resource 여서, 최초의 전체 파싱 전까지는 Render Tree가 생성되지 못한다. 계단식 상속 형식으로 되어 있어서 그렇다. 
+- 재밌는 점은, 현재 해당하는 디바이스에 부합해야만 Render Blocking을 한다. 즉, 만약 landscape로 되어 있는데, portrait 모드를 사용중이면, Rendering을 막지 않는다.
+- Script Blocking에도 해당하여, Javascript는 CSSOM이 생성되기 전까지 대기한다.
+
+3. Javascript 실행
+- Javascript는 Parser Blocking Resource인데, Javascript가 실행되는 동안에는 HTML의 파싱 자체가 막힌다. 즉, 코드가 `<script>` 태그에 도달하면, 우선 멈추고 코드를 실행시킨다. 그렇기 때문에 Javascript 파일은 보통 `<body>` 태그 가장 아래에 넣곤한다.
+- Script Tag 내부에 `async` 키워드를 사용하여 비동기로 호출할 수 있긴 하다.
+
+4. Render Tree 제작
+- DOM과 CSSOM의 조합이라고 보면 된다. 실제로 화면상에 렌더링이 되는 항목들을 나타내는 Tree다.
+- 보여지는 컨텐츠만 해당이 되고, `display: none`과 같은 속성들은 나타나지 않는다. (DOM과 다른점)
+
+5. Layout 생성
+- 이 단계에서는 viewport의 크기 등을 결정한다.
+- viewport 사이즈는 meta viewport 태그로 결정된다. 가장 많이 사용되는것은 아래와 같다.
+
+```html
+<meta name="viewport" content="width=device-width,initial-scale=1">
+```
+
+6. 그리기
+- 이 단계에서 보여지는 컨텐츠들은 Pixel 단위로 변환되고 화면에 그려진다.
+
+## Reflow & Repaint
+
+Repaint는 layout을 수정하지 않지만, 요소를 변화시키는 경우 발생한다. `outline`, `visibility`, `background`, `color`와 같은 요소들이 해당된다.
+
+Reflow는 화면의 부분이나 혹은 전체를 다 변경하는 작업을 수행하기 때문에 퍼포먼스에 더 큰 영향을 미친다. `width`, `height`, `font-family`, `font-size` 등등 개별 레이아웃의 크기에 연관될 수 있는 항목들은 전부 Reflow를 유발한다고 생각하면 된다.
+- 윈도우 리사이징
+- 폰트 변경
+- 스타일 쉬트 추가 제거
+- **Input Box 등에 타이핑하는 것 (컨텐츠 변경)**
+- `:hover` 등 CSS pseudo class 유발하는 것
+- 클래스 속성 변경
+- DOM을 조작하는 스크립트
+- **`offsetWidth`, `offsetHeight` 측정하는 것**
+- 스타일 속성 값을 설정하는 것
+
+[https://csstriggers.com/](CSS Triggers)
+
+* 차후에 읽어볼 것: [https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Performance_best_practices_for_Firefox_fe_engineers](Performance best practices for Firefox front-end engineers)
+
+### DOM Manipulation을 줄이는 방법
+
+Reflow는 앞에서 언급했듯이, 굉장히 부담이 큰 작업이기 때문에, `document.body.appendChild`와 같은 함수가 여러번 호출될 경우, 심각하게 성능이 저하될 수 있다.
+
+```javascript
+for (let i = 0; i < 100; i++) {
+  const el = document.createElement('p');
+  el.textContent = `Attached Child Element ${i}`
+  document.body.appendChild(el);
+}
+```
+
+위와 같은 예제는 곧, Reflow를 최소 100번 발생시킬 수 있다. DOM이 추가될 때마다 Trigger되기 때문이다. 이런 케이스를 방지하기 위해 `createDocumentFragment`를 사용하면, Proxy DOM에 Child Node를 추가해 놓고, 한 번에 Flush 하는 형식으로 사용할 수 있다.
+
+이 방법을 사용할 경우, 실제로 DOM이 Render된 것이 아니기 때문에 Reflow는 마지막 한 번만 발생하게 된다.
+
+```javascript
+const frag = document.createDocumentFragment();
+
+for (let i = 0; i < 100; i++) {
+  const el = document.createElement('p');
+  el.textContent = `Attached Child Element ${i} to Fragment`
+  frag.appendChild(el);
+}
+document.body.appendChild(frag);
+```
+
+
+## References
+
+[https://bitsofco.de/what-exactly-is-the-dom/](What, exactly, is the DOM?)
+
+[https://bitsofco.de/understanding-the-critical-rendering-path/](Understanding the Critical Rendering Path)
+
+[https://gist.github.com/paulirish/5d52fb081b3570c81e3a](What forces layout / reflow?)
+
+[http://www.stubbornella.org/content/2009/03/27/reflows-repaints-css-performance-making-your-javascript-slow/](Reflows & Repaints: CSS Performance making your Javascript slow?)
