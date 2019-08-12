@@ -6,6 +6,12 @@ categories: "javascript"
 published: true
 ---
 
+## Immediately Invoked Function Expression (IIFE)
+
+IIFE는 함수와, 그 안에 존재하는 변수의 Scope 보호에 주로 사용되곤 한다.
+
+* IIFE를 변수에 할당할 경우, 해당 함수의 리턴 값이 저장된다. (Function 자체가 저장되는 것이 아니다).
+
 ## Functional Programming이란
 
 함수형 프로그래밍은 프로그램을 함수의 계산으로 바라보는 프로그래밍 패러다임이다. 아래와 같은 개념들이 보장되어야 한다.

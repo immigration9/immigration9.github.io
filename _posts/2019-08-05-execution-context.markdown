@@ -7,6 +7,7 @@ published: true
 ---
 
 ## Javascript Conceptual Stuff
+
 * Syntax Parsers
 * Lexical Environments
 * Execution Contexts (실행 컨텍스트): Javascript 코드 실행시 Execution Context (eg. Javascript Engine)은 코드를 Wrapping한다.
@@ -34,6 +35,7 @@ b는 실행이 되고, a는 되지만, `undefined`가 반환된다.
 그런데 이 Hoisting이 단순히 선언이 먼저 된다! 라는 식으로 말하기엔 맞지 않다.
 
 Execution Context (Javascript Engine의 작동)는 2개의 Phase를 거치게 된다.
+
 1. Creation Phase
 - Global Object, 'this', Outer Environment (if exists)가 생성된다.
 - 변수와 함수들을 위해 메모리 공간 할당: 이를 Hoisting이라고 한다.
@@ -63,10 +65,13 @@ console.log(a);
 위와 같이 구성할 경우, `var a = "Hello, World!";`에서 a 변수에 할당된다.
 
 ## Single Threaded, Synchronous Execution
+
 * Synchronous Execution: One at a time
 
 ## Function Invocation and The Execution Stack
+
 * Function Invocation: Running a function, Javascript에서는 ()를 쓴다.
+
 ```javascript
 function b() {}
 
@@ -76,6 +81,7 @@ function a() {
 
 a();
 ```
+
 이 코드를 실행하면
 1. Global Execution Context가 실행된다. -> this, Global Object(window)를 만들고, b와 a 함수들을 메모리에 상주시킨다.
 2. Execution Context 생성 & 실행: a 가 실행이 된다.
@@ -86,6 +92,7 @@ a();
 즉, 함수(function)가 실행될 때마다, 각 함수를 위해 Execution Context가 생성된다.
 
 ## Functions, Context, and Variable Environments
+
 * Variable Environment: 변수가 어디 위치한 것인지. (Scope)
   
 ```javascript
@@ -117,6 +124,7 @@ function a() {
 var myVar = 1;
 a();
 ```
+
 b의 `myVar`는 Outer Environment를 참고하는데, 그것이 Global Execution Context이다.
 여기서 Lexical Environment가 중요한데,
 b의 Lexical Environment는 Global Execution Context기 때문이다. (thus, `myVar`가 없기 때문에, Outer Environment에서 찾는 것).
@@ -139,18 +147,22 @@ function a() {
 var myVar = 1;
 a();
 ```
+
 이 상황에서 b의 Lexical Environment는 a 안이기 때문에, Outer Environment인 a에 속한 `myVar` 값을 참고하게 된다.
 만약 a 안에 myVar가 선언되어 있지 않다면, Global Execution Context 단계로 넘어가 1을 반환한다.
 
 ## Scope, ES6, and `let`
+
 * Scope: 코드 상에 존재하는 변수의 위치
 * `let`: Block Scoping이 가능하게 한다.
 
 ## What about Asynchronous Callbacks?
+
 * Browser에는 Javascript Engine이외에도 Rendering Engine, HTTP Request 등이 있다.
 * 다른 것과 조합하여 Asynchronous하게 작동할 수 있지만, Javascript Engine만 놓고 봤을 때는 Synchronous하게 작동한다.
 
 ### Event Queue
+
 Stack이 비어 있으면, Javascript Engine은 Event Queue를 확인하고 있을 경우 실행시킨다.
 예를들어, `click` 이벤트가 Queue에 있으면, clickHandler Execution Context가 실행된다.
 

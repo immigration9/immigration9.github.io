@@ -103,6 +103,11 @@ for (let i = 0; i < 100; i++) {
 document.body.appendChild(frag);
 ```
 
+## Cross Browsing & CSS Reset
+
+[http://webberstudy.com/html-css/css-2/cross-browser/](Cross Browsing 관련 CSS)
+
+Reset CSS (Derived from Normalize CSS): https://gist.github.com/DavidWells/18e73022e723037a50d6
 
 ## References
 
