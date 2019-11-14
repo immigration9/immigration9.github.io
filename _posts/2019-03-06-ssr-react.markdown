@@ -1,15 +1,14 @@
 ---
 layout: post
-title:  "React: Server Side Rendering"
-date:   2019-03-06 23:00:00 +09:00
-categories: "react"
+title: 'React: Server Side Rendering'
+date: 2019-03-06 23:00:00 +09:00
+categories: 'react'
 published: true
 ---
 
 API Server -> Rendering Server 구조
 
 ReactDOM.renderToString()
-
 
 ```
 /Users/immigration9/git/ssr-react/server/src/index.js:9
@@ -31,7 +30,6 @@ SyntaxError: Unexpected token <
 
 Home.js -> index.js -> Webpack -> Babel -> bundle.js (Run Node server with this)
 
-
 ```json
 "scripts": {
   "dev:server": "nodemon --watch build --exec \"node build/bundle.js\"",
@@ -39,29 +37,26 @@ Home.js -> index.js -> Webpack -> Babel -> bundle.js (Run Node server with this)
 }
 ```
 
-* Server Side Rendering
-* Universal Javascript
-* Isomorphic Javascript
-
+- Server Side Rendering
+- Universal Javascript
+- Isomorphic Javascript
 
 ```javascript
-import React from 'react'
-
+import React from 'react';
 
 const Home = () => {
   return (
     <div>
       <div>I'm the Home Component!</div>
-      <button onClick={() => console.log("hello, world!")}>Click Me!</button>
+      <button onClick={() => console.log('hello, world!')}>Click Me!</button>
     </div>
-  )
-}
+  );
+};
 
 export default Home;
 ```
 
-* 작동 안할것이다. HTML만으로 생성되었기 때문이다.
-
+- 작동 안할것이다. HTML만으로 생성되었기 때문이다.
 
 ## webpack-node-externals
 
@@ -82,16 +77,18 @@ const config = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'build')
   },
-  externals: [ webpackNodeExternals() ]
-}
+  externals: [webpackNodeExternals()]
+};
 
 module.exports = merge(baseConfig, config);
 ```
-* 서버 사이드에서 돌린다고 가정하면, 어차피 `node_modules` 폴더가 같이 있기 때문에, 굳이 번들링을 전체로 할 필요가 없다. `webpack-node-externals`를 사용하면 번들링 번들 파일 크기를 대폭 줄일 수 있다. (브라우저로 보낼 시에는 사용할 수 없다)
 
+- 서버 사이드에서 돌린다고 가정하면, 어차피 `node_modules` 폴더가 같이 있기 때문에, 굳이 번들링을 전체로 할 필요가 없다. `webpack-node-externals`를 사용하면 번들링 번들 파일 크기를 대폭 줄일 수 있다. (브라우저로 보낼 시에는 사용할 수 없다)
 
 ## BrowserRouter & StaticRouter
+
 1. 서버 사이드 렌더링이 없을 때 로직
+
 - 브라우저가 `/users` 요청
 - Express 서버가 `app.get(*)` 응답
 - Express 서버가 `index.html` 파일 전송
@@ -100,21 +97,21 @@ module.exports = merge(baseConfig, config);
 - BrowserRouter가 주소창에 있는 URL을 확인 후, 해당하는 Route 렌더링
 
 2. 서버 사이드 렌더링시
-서버에서 내려줄 때는, 주소창 자체가 없기 때문에, 해당 로직을 사용할 수가 없음. 서버 사이드에서 내릴 때는 `StaticRouter`를 사용해야함.
+   서버에서 내려줄 때는, 주소창 자체가 없기 때문에, 해당 로직을 사용할 수가 없음. 서버 사이드에서 내릴 때는 `StaticRouter`를 사용해야함.
 
 ```javascript
-export default (req) => {
+export default req => {
   const content = renderToString(
     <StaticRouter location={req.path} context={{}}>
-      <Routes/>
+      <Routes />
     </StaticRouter>
   );
 
   return content;
-}
+};
 ```
-* `StaticRouter`는 주소를 읽을 수가 없기 때문에 (브라우저가 아니다), `req` parameter를 받아다가 별도로 `location` prop에 넣어주는 작업을 하자.
 
+- `StaticRouter`는 주소를 읽을 수가 없기 때문에 (브라우저가 아니다), `req` parameter를 받아다가 별도로 `location` prop에 넣어주는 작업을 하자.
 
 ## Routing 설정
 
@@ -122,19 +119,17 @@ export default (req) => {
 app.use(express.static('public'));
 app.get('*', (req, res) => {
   res.send(renderer(req));
-})
-
+});
 ```
+
 기존의 `/`만 있을 경우, 최상단 Route를 제외하고 다른 경우는 읽히지 않을 것이다. 아스테리스크로 처리해주자.
 
-
 ## Redux 도입
+
 1. Browser vs Server configuration이 다름: Browser위한 Store와 Server를 위한 Store를 두 개 가질 예정
 2. Authentication 문제는 서버에서 대뤄져야 함. 서버에서는 Cookie를 접근하기가 어렵다.
 3. 서버 상에서 최초의 데이터를 불러오는 Action Creator가 언제 완료되는지를 감지해야함
 4. 브라우저 상에서 State rehydration이 필요
 
-
-
-1. URL 기반으로, 어떤 컴포넌트가 렌더 되어야 하는지 확인
-2. 컴포넌트들에 부착되어 있는 `loadData` 메소드 호출
+1) URL 기반으로, 어떤 컴포넌트가 렌더 되어야 하는지 확인
+2) 컴포넌트들에 부착되어 있는 `loadData` 메소드 호출

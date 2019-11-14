@@ -1,0 +1,25 @@
+---
+layout: post
+title: 'GraphQL - Basics'
+date: 2019-08-20 02:10:00 +09:00
+categories: 'graphql'
+published: true
+---
+
+## GraphQL이란 무엇인가?
+
+## GraphQL 시작하기
+
+```
+npm install --save express express-graphql graphql lodash
+```
+
+바로 시작하면 다음과 같은 에러를 볼 수 있다.
+
+```
+{"errors":[{"message":"GraphQL middleware options must contain a schema."}]}
+```
+
+## GraphiQL Library
+
+## Json Server

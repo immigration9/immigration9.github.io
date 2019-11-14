@@ -1,30 +1,31 @@
 ---
 layout: post
-title:  "Links for me to remember"
-date:   2019-03-06 00:00:00 +09:00
-categories: "typescript"
+title: 'Links for me to remember'
+date: 2019-03-06 00:00:00 +09:00
+categories: 'typescript'
 published: false
 ---
 
-* LocalStorage with Typescript: https://medium.com/rainist-engineering/safe-localstorage-using-typescdript-eac147f59ae
+- LocalStorage with Typescript: https://medium.com/rainist-engineering/safe-localstorage-using-typescdript-eac147f59ae
 
-* module.d.ts: https://www.typescriptlang.org/docs/handbook/declaration-files/templates/module-d-ts.html
+- module.d.ts: https://www.typescriptlang.org/docs/handbook/declaration-files/templates/module-d-ts.html
 
-* Developer Park Kyungwook: https://kyungw00k.github.io/
-  
-* React-Hooks Typescript: https://medium.com/@jrwebdev/react-hooks-in-typescript-88fce7001d0d
+- Developer Park Kyungwook: https://kyungw00k.github.io/
 
-* Go / Gin / React: https://dev.to/codehakase/building-a-web-app-with-go-gin-and-react-5ke
+- React-Hooks Typescript: https://medium.com/@jrwebdev/react-hooks-in-typescript-88fce7001d0d
 
-* Setting up Typescript with Babel & Webpack: https://medium.com/@francesco.agnoletto/how-to-set-up-typescript-with-babel-and-webpack-6fba1b6e72d5
+- Go / Gin / React: https://dev.to/codehakase/building-a-web-app-with-go-gin-and-react-5ke
 
-* Applying Typescript (Must read): http://artsy.github.io/blog/2017/11/27/Babel-7-and-TypeScript/
+- Setting up Typescript with Babel & Webpack: https://medium.com/@francesco.agnoletto/how-to-set-up-typescript-with-babel-and-webpack-6fba1b6e72d5
 
-* Understanding Mixins in Javascript: https://blog.bitsrc.io/understanding-mixins-in-javascript-de5d3e02b466
+- Applying Typescript (Must read): http://artsy.github.io/blog/2017/11/27/Babel-7-and-TypeScript/
 
-* Typescript Function: https://hyunseob.github.io/2016/11/18/typescript-function/
+- Understanding Mixins in Javascript: https://blog.bitsrc.io/understanding-mixins-in-javascript-de5d3e02b466
 
-* React-Redux Typescript Guide: https://github.com/piotrwitek/react-redux-typescript-guide/blob/master/README.md
+- Typescript Function: https://hyunseob.github.io/2016/11/18/typescript-function/
+
+- React-Redux Typescript Guide: https://github.com/piotrwitek/react-redux-typescript-guide/blob/master/README.md
 
 ## Start from Here. Create your own React
+
 1. babel-plugin-transform-react-jsx: https://github.com/babel/babel/blob/master/packages/babel-plugin-transform-react-jsx/src/index.js

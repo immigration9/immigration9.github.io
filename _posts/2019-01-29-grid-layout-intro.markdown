@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Pseudo-Class / Attribute Selector"
-date:   2019-02-01 01:00:00 +09:00
-categories: "sass"
+title: 'Pseudo-Class / Attribute Selector'
+date: 2019-02-01 01:00:00 +09:00
+categories: 'sass'
 published: true
 ---
 
@@ -19,9 +19,11 @@ published: true
     margin-bottom: 8rem;
   }
 ```
+
 `not` pseudo-class를 통해, () 안에 있는 class를 제외한 나머지에 아래 내용을 적용할 수가 있다.
 
 ## calc()
+
 `.col-*-of-*`의 경우, 전체 `.row`의 길이 중에 계산을 해야한다. 일반적으로 `calc()`를 사용하면 되는데, SCSS의 경우, `calc()` 내부에서 변수를 사용할 경우 앞에 `#{}`를 붙혀야한다.
 
 ```scss
@@ -41,7 +43,7 @@ $gutter-horizontal = 8rem;
 ```scss
 @mixin clearfix {
   &::after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }
@@ -58,8 +60,8 @@ $gutter-horizontal = 8rem;
 }
 ```
 
-
 ## Attribute selector
+
 먼저 Column을 만들어보자.
 
 ```scss
@@ -73,13 +75,14 @@ $gutter-horizontal = 8rem;
   }
 }
 ```
-위와 같은 방식으로 1/2에 해당하는 Column을 생성하였다. 
+
+위와 같은 방식으로 1/2에 해당하는 Column을 생성하였다.
 하지만, 동일한 방식으로 Column을 여러개 만든다면 굳이 `background-color` 밑에 항목들은 반복해서 작성해야 하는 것일까?
 
 그런 경우를 위해 Attribute Selector를 사용할 수 있다.
 
 ```scss
-[class^="col-"] {
+[class^='col-'] {
   background-color: orangered;
   float: left;
 

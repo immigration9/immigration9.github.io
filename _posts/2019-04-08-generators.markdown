@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "ES6: Generators prior to understanding Sagas"
-date:   2019-04-08 01:00:00 +09:00
-categories: "javascript"
+title: 'ES6: Generators prior to understanding Sagas'
+date: 2019-04-08 01:00:00 +09:00
+categories: 'javascript'
 published: true
 ---
 
@@ -24,6 +24,7 @@ console.log(total);
 ```
 
 ## Generators
+
 여러번 출입할 수 있는 함수를 뜻한다. 과연 이게 의미하는 바가 무엇일까?
 
 ```javascript
@@ -31,7 +32,7 @@ function* numbers() {
   yield;
 }
 const gen = numbers();
-gen.next(); // {"done":false} 
+gen.next(); // {"done":false}
 gen.next(); // {"done":true}
 ```
 
@@ -51,15 +52,14 @@ function* shopping() {
 // stuff in the store
 const gen = shopping();
 gen.next(); // leaving our house
-gen.next('groceries') ; // leaving the store with groceries
+gen.next('groceries'); // leaving the store with groceries
 ```
-
 
 ```javascript
 const testingTeam = {
   lead: 'Amanda',
   tester: 'Bill'
-}
+};
 
 const engineeringTeam = {
   testingTeam,
@@ -68,7 +68,7 @@ const engineeringTeam = {
   lead: 'Jill',
   manager: 'Alex',
   engineer: 'Dave'
-}
+};
 
 function* TeamIterator(team) {
   yield team.lead;
@@ -96,11 +96,11 @@ names;
 const testingTeam = {
   lead: 'Amanda',
   tester: 'Bill',
-  [Symbol.iterator]: function* () {
+  [Symbol.iterator]: function*() {
     yield this.lead;
     yield this.tester;
   }
-}
+};
 
 const engineeringTeam = {
   testingTeam,
@@ -109,13 +109,13 @@ const engineeringTeam = {
   lead: 'Jill',
   manager: 'Alex',
   engineer: 'Dave',
-  [Symbol.iterator]: function* () {
+  [Symbol.iterator]: function*() {
     yield this.lead;
     yield this.manager;
     yield this.engineer;
     yield* this.testingTeam;
   }
-}
+};
 
 const names = [];
 for (let name of engineeringTeam) {

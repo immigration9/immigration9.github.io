@@ -1,0 +1,74 @@
+---
+layout: post
+title: 'Todolist - React Hooks / Typescript / Testing'
+date: 2019-10-13 09:30:00 +09:00
+categories: 'react'
+published: false
+---
+
+```
+React Hooks
+Typescript
+ESLint / TSLint
+Jest + Enzyme Testing
+Cypress
+```
+
+```
+yarn add styled-components redux react-router-dom react-redux
+yarn add --dev @types/styled-components @types/react-router-dom @types/react-redux enzyme enzyme-adapter-react-16
+```
+
+1. Directory Setup
+2. Test Setup
+3. Store Configure
+4. Action / Reducer Definition
+5. Write Test codes
+6. Write Actual codes
+7. Write Integrated tests
+
+## 2. Test Setup - Enzyme
+
+`scripts/enzymeSetup.js`
+
+## 3. Store Configure
+
+React Redux와 React Hooks 연동
+
+### useSelector
+
+```javascript
+const result : any = useSelector(selector : Function, equalityFn? : Function);
+```
+
+- 이 셀렉터는 컨셉상 `connect`에 대한 `mapStateToProps`의 인수와 동일하다. 전체 Redux state 상태를 유일한 인수로 사용하여 호출된다.
+
+* 발동조건
+
+- 컴포넌트가 렌더 될 때마다 실행된다.
+- `useSelector`는 또한 Redux store에 subscribe하여, action이 dispatch 될 때마다 selector를 실행시킨다.
+
+* mapState와의 차별점
+
+- 셀렉터는 단순히 객체가 아닌, 값을 반환할 수 있다. 셀렉터의 반환값은 `useSelector` hoook의 반환 값으로 사용된다.
+- action이 dispatch되었을 때, `useSelector`는 이전 selector의 반환값과 현재값의 얕은 비교를 한다. 서로가 다르다면, 컴포넌트는 강제로 re-render 된다. (같다면 해당되지 않음)
+- `ownProps`는 제공되지 않는다. 대신, 클로저나 selector currying을 통해 해결할 수 있다.
+
+* 동일성 비교와 업데이트
+
+- Function Component가 렌더될 때, selector function이 호출되고, `useSelector` hook으로부터 결과값이 반환된다.
+- **여기서 주의해야할 점이**, action이 Redux store로 dispatch 되었을 때, `useSelector`는 selector의 결과값이 마지막 결과값과 다를 경우에만 강제로 re-render를 한다. 동일성 비교는 `===`을 사용하는데, 이는 `mapState`의 결과를 놓고 얕은 비교를 하는 `connect`와 다른 점이다.
+
+### useDispatch
+
+```javascript
+const dispatch = useDispatch();
+```
+
+- 발동조건
+
+* 이 hook은 Redux store로부터 `dispatch` 함수의 레퍼런스를 반환한다. action을 dispatch할 때 사용된다.
+
+- `dispatch`를 이용하여 자녀 컴포넌트에 callback을 전달할 경우, `useCallback`을 이용하여 메모이징 하는 것이 추천된다. 이렇게 하지 않을 경우, 레퍼런스 값 변경으로 불필요하게 re-rendering 되기 때문이다.
+
+## 4. Action / Reducer Definition

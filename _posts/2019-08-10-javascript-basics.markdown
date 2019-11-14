@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Javascript Basics"
-date:   2019-08-10 18:30:00 +09:00
-categories: "javascript"
+title: 'Javascript Basics'
+date: 2019-08-10 18:30:00 +09:00
+categories: 'javascript'
 published: true
 ---
 
@@ -10,11 +10,12 @@ published: true
 
 IIFE는 함수와, 그 안에 존재하는 변수의 Scope 보호에 주로 사용되곤 한다.
 
-* IIFE를 변수에 할당할 경우, 해당 함수의 리턴 값이 저장된다. (Function 자체가 저장되는 것이 아니다).
+- IIFE를 변수에 할당할 경우, 해당 함수의 리턴 값이 저장된다. (Function 자체가 저장되는 것이 아니다).
 
 ## Functional Programming이란
 
 함수형 프로그래밍은 프로그램을 함수의 계산으로 바라보는 프로그래밍 패러다임이다. 아래와 같은 개념들이 보장되어야 한다.
+
 - 1급 객체 (고차 함수)
 - 불변성
 - 순수 함수
@@ -27,20 +28,21 @@ IIFE는 함수와, 그 안에 존재하는 변수의 Scope 보호에 주로 사�
 아래와 같은 코드에서는, `for` 반복문을 돌면서, 함수의 매개변수가 아닌 값을 변화시킨다.
 
 ```javascript
-var values = [ 1, 2, 3, 4, 5 ];
+var values = [1, 2, 3, 4, 5];
 var sumOfValues = 0;
 
-for (var i = 0; i < values.length; i++) { // 여기서는 i의 값이 계속 변이된다.
+for (var i = 0; i < values.length; i++) {
+  // 여기서는 i의 값이 계속 변이된다.
   sumOfValues += values[i]; // 이 부분에서 sumOfValues 값을 변화시킨다.
 }
 
-sumOfValues
+sumOfValues;
 ```
 
 함수형 프로그래밍에서는, 불변성을 보장하기 위해 아래와 같이 작성할 수 있다. 아래의 예제는, 재귀 형식을 사용하여 함수 외부에 존재하는 변수나 요소에 영향을 받지 않고, 오로지 매개변수에 따른 결과값을 반환할 수 있게 해준다.
 
 ```javascript
-let list = [ 1, 2, 3, 4, 5 ];
+let list = [1, 2, 3, 4, 5];
 
 function sum(list, accumulator) {
   if (list.length === 0) {
@@ -50,17 +52,16 @@ function sum(list, accumulator) {
 }
 
 let total = sum(list, 0);
-
 ```
 
 ## First-class Object
 
 함수를 다른 변수와 동일하게 다루는 언어를 '일급 함수'를 가졌다고 표현한다. 즉, 언어가 함수를 값으로 다룰 수 있다면 일급 함수를 갖는다고 할 수 있다.
 
-* Javascript는 Function 자체가 Object의 인스턴스기 때문에 일급함수를 갖는다.
-  
-- 함수를 인자로 전달 (콜백 함수)
-- 함수를 반환
+- Javascript는 Function 자체가 Object의 인스턴스기 때문에 일급함수를 갖는다.
+
+* 함수를 인자로 전달 (콜백 함수)
+* 함수를 반환
 
 ## High-Order Function
 
@@ -77,15 +78,15 @@ Promise 객체는 비동기 작업이 맞이할 미래의 완료 또는 실패�
 
 ## Event Delegation / Event Bubbling
 
-이벤트 위임은 특정 노드로 Event Listener를 등록하지 않고, 하나의 부모 노드에 등록하는 것을 의미한다. 
+이벤트 위임은 특정 노드로 Event Listener를 등록하지 않고, 하나의 부모 노드에 등록하는 것을 의미한다.
 
 예를들어, 아래와 같은 코드가 있다고 가정하자.
 
 ```javascript
 <ul id="parent-list">
-	<li id="post-1">Item 1</li>
-	<li id="post-2">Item 2</li>
-	<li id="post-3">Item 3</li>
+  <li id="post-1">Item 1</li>
+  <li id="post-2">Item 2</li>
+  <li id="post-3">Item 3</li>
 </ul>
 ```
 
@@ -93,9 +94,9 @@ Promise 객체는 비동기 작업이 맞이할 미래의 완료 또는 실패�
 아래와 같이, Event Bubble을 `ul` 요소로 올려주고, 실제로 클릭 된 노드를 찾아가도록 하면 된다.
 
 ```javascript
-document.getElementById("parent-id").addEventListener("click", function(evt) {
-  if (evt.target && evt.target.nodeName === "LI") {
-    console.log("Selected Item: " + e.target.id + " was clicked!");
+document.getElementById('parent-id').addEventListener('click', function(evt) {
+  if (evt.target && evt.target.nodeName === 'LI') {
+    console.log('Selected Item: ' + e.target.id + ' was clicked!');
   }
 });
 ```
@@ -104,12 +105,21 @@ document.getElementById("parent-id").addEventListener("click", function(evt) {
 `matches` API를 사용하면 된다.
 
 ```javascript
-document.getElementById("someDiv").addEventListener("click", function(evt) {
-  if (evt.target && e.target.matches("a.someClass")) {
-    console.log("Selected some class: " + e.target.className + "" )
+document.getElementById('someDiv').addEventListener('click', function(evt) {
+  if (evt.target && e.target.matches('a.someClass')) {
+    console.log('Selected some class: ' + e.target.className + '');
   }
 });
 ```
+
+## Event Bubbling vs Capturing, Event Delegation
+
+버블링: 이벤트 발생시 해당 이벤트가 상위 요소로 전달되는 것 (Default 옵션 상태에서는 버블링 형태로 전달됨)
+
+캡쳐링: 반대로, 최상위 요소부터 시작하여 이벤트 발생 지점을 찾아가는 것.
+(Capturing 옵션을 true로 설정시 캡쳐링 형태로 전달됨)
+
+Event Delegation:
 
 ## References
 

@@ -1,14 +1,15 @@
 ---
 layout: post
-title:  "Studying Sass Again"
-date:   2019-01-28 08:00:00 +09:00
-categories: "sass"
+title: 'Studying Sass Again'
+date: 2019-01-28 08:00:00 +09:00
+categories: 'sass'
 published: true
 ---
 
 ## Sass 기본 정리
 
 ## Variables
+
 ```scss
 * {
   margin: 0;
@@ -23,30 +24,32 @@ nav {
 }
 ```
 
-
 ## Nesting
+
 Nesting을 이용하여 pseudo-class 사용 간편화
+
 ```scss
 .btn-main {
   &:link {
     background-color: $color-secondary;
   }
-  
+
   &:hover {
     background-color: darken($color-secondary, 15%);
   }
 }
 ```
-* 여기서 `darken`, `lighten`은 SASS 문법으로, 색상을 해당 퍼센트 만큼 조정한다.
 
+- 여기서 `darken`, `lighten`은 SASS 문법으로, 색상을 해당 퍼센트 만큼 조정한다.
 
 ## Mixin
+
 Mixin은 미리 정의해놓고 나중에 사용하는 것이라고 보면 된다.
 
 ```scss
 @mixin clearfix {
   &::after {
-    content: "";
+    content: '';
     clear: both;
     display: table;
   }
@@ -55,41 +58,39 @@ Mixin은 미리 정의해놓고 나중에 사용하는 것이라고 보면 된�
 nav {
   margin: 30px;
   background-color: $color-primary;
-  
+
   @include clearfix;
 }
 ```
 
 Mixin에 argument 전달할 경우
-```scss
 
+```scss
 @mixin style-link-text($color) {
   text-decoration: none;
   text-transform: uppercase;
   color: $color;
 }
-    
+
 a {
   @include style-link-text($color-text-dark);
 }
 ```
 
-
 ## Extends
 
 Placeholder를 이용해서 중복된 코드를 대체할 수 있다.
-```scss
 
+```scss
 %btn-placeholder {
   padding: 10px;
   display: inline-block;
   text-align: center;
   border-radius: 100px;
-  
+
   width: $width-button;
   @include style-link-text($color-text-light);
 }
-
 
 .btn-main {
   &:link {
@@ -104,7 +105,6 @@ Placeholder를 이용해서 중복된 코드를 대체할 수 있다.
     background-color: $color-secondary;
   }
 }
-
 ```
 
 위 상황과 같이 동일한 `btn-placeholder`를 중복해서 사용할 경우 유용하다. 이렇게 하지 않고 CSS로 구현하고자 한다면 아래와 같이 중복 코드가 발생한다.
@@ -119,11 +119,11 @@ Placeholder를 이용해서 중복된 코드를 대체할 수 있다.
 }
 
 .btn-main:hover {
-  ...pass
+  ...pass;
 }
 
 .btn-hot:hover {
-  ...pass
+  ...pass;
 }
 ```
 
@@ -131,8 +131,8 @@ Placeholder를 이용해서 중복된 코드를 대체할 수 있다.
 
 다만, 헷갈리면 그냥 mixin을 쓰는게 낫다. 정말 필요한 경우가 아니고서야...
 
-
 ## 추가적인 Nesting
+
 놀랍게도 아래와 같이 nesting을 변경할 수 있다.
 
 ```scss
@@ -140,12 +140,12 @@ Placeholder를 이용해서 중복된 코드를 대체할 수 있다.
 .header {
   height: 95vh;
   background-image: linear-gradient(
-    to right bottom, 
-    rgba($color-primary-light, 0.6), 
-    rgba($color-primary-dark, 0.6)), 
+    to right bottom,
+    rgba($color-primary-light, 0.6),
+    rgba($color-primary-dark, 0.6)),
     url(../img/hero.jpg);
 
-  /** 
+  /**
   * `.header__logo-box` 와 같다
   **/
   &__logo-box {
@@ -155,15 +155,15 @@ Placeholder를 이용해서 중복된 코드를 대체할 수 있다.
   }
 
   &__logo {
-    height: 35px; 
+    height: 35px;
   }
 
 ```
+
 여기서 나온 `&__logo-box`는 기존에 선언하였던 `.header__logo-box`와 같다고 보면 된다.
 
-
 ## Partial Import
-Compile되긴 원하지 않고, `import`용도로만 사용하고 싶다면, 앞에 _를 붙히면 된다. `_base.scss`
 
-불러올 때는 `@import 'base` (_와 scss는 필요없음)
+Compile되긴 원하지 않고, `import`용도로만 사용하고 싶다면, 앞에 \_를 붙히면 된다. `_base.scss`
 
+불러올 때는 `@import 'base` (\_와 scss는 필요없음)

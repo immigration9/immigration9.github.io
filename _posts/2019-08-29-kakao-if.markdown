@@ -1,0 +1,98 @@
+---
+layout: post
+title: 'Kakao if 행사 정리'
+date: 2019-08-29 11:00:00 +09:00
+categories: 'javascript,react'
+published: true
+---
+
+## Session 1: 리액트 그것마저 정해주마
+
+### 코딩 컨벤션
+
+1. 함수형 컴포넌트 작성시
+
+작성 순서
+속성값 타입 정의
+컴포넌트
+기타
+
+- 매개변수 비구조화
+- 조건부 렌더링에 && 연산자 사용
+
+2. 클래스형 컴포넌트 작성시
+
+속성값 타입 정의
+상탯값
+생명 주기 메서드
+기타 메서드
+Render 메서드
+
+- 코딩 컨벤션을 지키기 위해 ESLint, Prettier 사용
+
+### 기존 클래스형 컴포넌트를 훅으로 변경해야 할것인가?
+
+훅 쓰자
+
+### SSR에 대한 고민
+
+- 유지비용의 문제
+- 내가 작성하는 코드가 서버에서도 실행된다는 것을 항상 인지해야함 ex. window 객체가 없음
+- 서버에서는 사용자 스크린 사이즈를 알 방법이 없음
+
+### 렌더 함수 안에서 새로운 객체를 생성하는 것에 대해
+
+- 렌더링 CPU 사용량 높음
+- 요즘 브라우저에서는 새로운 객체의 생성은 충분히 빠르다. 하지만, 그 내부에 들어가는 function을 다시 render하는 것은 과도하다.
+- useCallback과 같은 기능을 사용하도록 하자. (memoization)
+
+```javascript
+{ user.map(user => (
+  <Profile key={user.id} onEditName={(name) => setEditName(name))} // 이거 말고
+))}
+
+{ user.map(user => (
+  <Profile key={user.id} onEditName={onEditCallback} // 이거 말고
+))}
+```
+
+### Redux를 써야하나요
+
+reducer.js / action.js / actionType.js
+
+- Ducks Pattern으로도 충분하다 (action + actionType / reducer 정도로)
+- createReducer를 사용해보자
+
+### 정적타입 도입에 대하여
+
+하자
+
+### CSS-IN-JS
+
+styled-components + rebass 사용
+
+## Session 2: Frontend 확장해서 브라우저로
+
+### 1. Paint
+
+CSS Painting API를 사용하면 CSS 속성 중 이미지 타입에 사용할 수 있는 모양을 정의 가능
+
+```
+.switch {
+  background-color: paint(switch)
+}
+```
+
+- Parsing -> DOM / CSSOM -> Render Tree -> Layout -> Paint -> Composite
+
+Paint 단계에 Worklet 제공 (Worker 경량 버전. 한 스레드에 여러개 생성 가능, 메인스레드에서도 실행 가능)
+
+Worklet: WorkletGlobalScope + EventLoop으로 구성
+
+### 2. Layout
+
+CSS Layout API
+
+https://css-houdini.rocks/masonry
+
+https://houdini.glitch.me/animation
