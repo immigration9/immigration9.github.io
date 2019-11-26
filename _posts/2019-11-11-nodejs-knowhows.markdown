@@ -83,3 +83,48 @@ class Product {
 ```
 
 현재 id가 배정되어 있으면 `update`를 진행 / 없으면 `insert`를 진행
+
+### 흐름 파악하기
+
+Router -> Controller -> Model 순으로 접근 후 Rendering 되는 것이라 생각하면 된다.
+
+```javascript
+// Router
+router.get('/cart', shopController.getCart);
+
+// Controller
+exports.getCart = (req, res, next) => {
+  req.user
+    .getCart()
+    .then(products => {
+      res.render('shop/cart', {
+        path: '/cart',
+        pageTitle: 'Your Cart',
+        products: products
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+// Model
+function getCart() {
+  const db = getDb();
+  const productIds = this.cart.items.map(i => {
+    return i.productId;
+  });
+  return db
+    .collection('products')
+    .find({ _id: { $in: productIds } })
+    .toArray()
+    .then(products => {
+      return products.map(p => {
+        return {
+          ...p,
+          quantity: this.cart.items.find(i => {
+            return i.productId.toString() === p._id.toString();
+          }).quantity
+        };
+      });
+    });
+}
+```

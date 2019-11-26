@@ -1,0 +1,98 @@
+---
+layout: post
+title: 'MongoDB 101'
+date: 2019-11-14 13:00:00 +09:00
+categories: 'mongodb,database'
+published: true
+---
+
+## What is mongoose?
+
+## mongoose in action
+
+mongoose가 가진 가장 큰 장점은, 기존에 MongoDB로 제작할 때 작성했던 boilerplate들을 모두 mongoose가 해결해준다는 점이다.
+
+아래와 같이 모델을 정의해보자.
+
+```javascript
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const productSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 100
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  imageUrl: String
+});
+
+module.exports = mongoose.model('Product', productSchema);
+```
+
+윗 모델은, 보기와 같이 Validation 과정이 같이 포함되어 있다. `type` 필드 지정 뿐만 아니라, 별도로 `required`나 `min` / `max`와 같은 내용까지 지정할 수 있다.
+
+나아가, 기존의 controller 부분을 아래와 같이 보완할 수 있다.
+
+```javascript
+exports.postEditProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDesc = req.body.description;
+
+  Product.findById(prodId)
+    .then(product => {
+      /**
+       * By using mongoose, saving an existing document
+       * will not trigger creating a new one.
+       * Instead, it will update the document.
+       *
+       */
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.description = updatedDesc;
+      product.imageUrl = updatedImageUrl;
+      return product.save();
+    })
+    .then(result => {
+      console.log('UPDATED PRODUCT!');
+      res.redirect('/admin/products');
+    })
+    .catch(err => console.log(err));
+};
+```
+
+edit을 할 경우에도, 기존의 MongoDB 구현 방식과는 조금 다른게, 기존의 MongoDB를 사용할 때는, `Product` 클래스의 `_id` 변수에 값이 할당되어 있는지를 확인하여 edit과 insert 유무를 결정하였다.
+
+mongoose의 경우, Cursor가 아닌 Query 결과물을 반환하기 때문에, 바로 사용할 수 있다.
+
+위와 같이 `product`의 `save()`를 바로 호출할 수 있다.
+이 경우, 새로운 것을 만드는게 아니라, 기존의 값을 수정한다.
+
+### Populate
+
+```javascript
+exports.getProducts = (req, res, next) => {
+  Product.find()
+    .populate('userId')
+    .then(products => {
+      // ...do something
+    });
+};
+```
+
+MongoDB의 `$lookup`과 같은 join 명령을 수행하는 집합 연산자와 유사하지만, 훨씬 더 강력하다고 볼 수 있다. 다른 컬렉션에 존재하는 도큐먼트를 레퍼런스 할 수 있도록 해준다.
+
+위 예제의 경우, `Product` 모델에 존재하는 `userId` 필드는 `User` 모델을 레퍼런스 하도록 설정되어 있다. `populate()` 메소드를 호출함으로써, 단순히 `userId`에 해당하는 값만 호출하는 것이 아니라, 해당 `userId`를 갖는 `User` 모델의 도큐먼트를 반환한다.
