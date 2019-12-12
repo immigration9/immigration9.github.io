@@ -53,32 +53,32 @@ s2 = "GXTXAYB"
 
 이 두 문자열들을 비교해보자.
 
-![dp_swe_00](/_images/dynanmic_programming/swe_dp_0.png);
+![dp_swe_00]{{ site.url }}/assets/dynamic_programming/swe_dp_0.png);
 
 - 두 개의 문자열을 표로 도식화하였을 때, 위와 같이 표현할 수 있다.
 
-![dp_swe_01](/_images/dynanmic_programming/swe_dp_1.png);
+![dp_swe_01]{{ site.url }}/assets/dynamic_programming/swe_dp_1.png);
 
 - 우선 가장 기본이 되는 항목들을 채워넣을 수 있다. 보시다시피, 빈 문자열과 다른 문자열의 비교는 무조건 0으로 귀결된다.
 
-![dp_swe_02](/_images/dynanmic_programming/swe_dp_2.png);
+![dp_swe_02]{{ site.url }}/assets/dynamic_programming/swe_dp_2.png);
 
 - 첫 번째 숫자는 양쪽이 모두 겹치는 G가 나올 때 기록된다. 이 경우에는, 양쪽 모두 제거가 가능함으로, `1 + lcs("A", "")`이 기록된다. 여기서 `lcs`의 결과가 0이므로 1이 기록된다.
 
-![dp_swe_03](/_images/dynanmic_programming/swe_dp_3.png);
+![dp_swe_03]{{ site.url }}/assets/dynamic_programming/swe_dp_3.png);
 
 - 두 번째 G가 나왔을 때는 마치 2가 기록될 수 있을 것 같지만, 그렇지 않다. 왜냐면 두 글자가 매칭될 경우 양쪽에서 제거를 하고 나머지를 계산하기 때문이다. 사실상 이 경우에는 `1 + lcs("AG", "")`가 되며, 이럴 경우 나머지 한쪽에 빈 문자열이기 때문에 따로 숫자가 가산되지 않는다.
 - 매치가 되지 않는 경우에는 양 쪽에서 한 글자씩 제거한 값 중 max값을 구한다. `max()`
 
-![dp_swe_04](/_images/dynanmic_programming/swe_dp_4.png);
+![dp_swe_04]{{ site.url }}/assets/dynamic_programming/swe_dp_4.png);
 
 - 이렇게 계산하였을 때, 더 이상의 매치는 발생하지 않았기 때문에 전부 양쪽의 한 글자를 제거한 항목들 중 max값을 반환한다.
 
-![dp_swe_05](/_images/dynanmic_programming/swe_dp_5.png);
+![dp_swe_05]{{ site.url }}/assets/dynamic_programming/swe_dp_5.png);
 
 - 두 번째 매치는 양쪽에 T가 등장하였을 때 기록되는데, 이 경우, 양변에서 T를 제거하였을 때 기록된 비교 값을 더해주면 된다. `1 + lcs("AGG", "GX")`를 기록하면 되는데, 이 경우 해당 결과값이 1이기 때문에 2로 늘어난다.
 
-![dp_swe_06](/_images/dynanmic_programming/swe_dp_6.png);
+![dp_swe_06]{{ site.url }}/assets/dynamic_programming/swe_dp_6.png);
 
 - 마지막 과정까지 반복을 하면 끝까지 숫자를 구할 수 있으며, 가장 최종까지 도착하였을 때 마지막 값은 longest common subsequence가 된다고 할 수 있다.
 
