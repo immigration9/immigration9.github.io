@@ -1,0 +1,46 @@
+---
+layout: post
+title: 'Typescript Ambient Modules'
+date: 2020-02-10 01:15:00 +09:00
+categories: 'typescript,definitelytyped'
+published: true
+---
+
+## Ambient Modules
+
+[Modules Typescript](https://www.typescriptlang.org/docs/handbook/modules.html#ambient-modules)
+
+Node.js로 작업할 때, 대부분의 테스크들은 하나 이상의 모듈을 불러오는 것으로 이뤄진다. 이 상황에서 `module` 키워드를 사용하면, 향후 `import`를 수행할 때 지정된 모듈의 명칭을 사용할 수 있다.
+
+```typescript
+// node.d.ts
+declare module 'url' {
+  export interface Url {
+    protocol?: string;
+    hostname?: string;
+    pathname?: string;
+  }
+
+  export function parse(
+    urlStr: string,
+    parseQueryString?,
+    slashesDenoteHost?
+  ): Url;
+}
+
+declare module 'path' {
+  export function normalize(p: string): string;
+  export function join(...paths: any[]): string;
+  export var sep: string;
+}
+```
+
+## declare class vs interface
+
+[Typescript declaration files contain class definitions with no member implementations](https://stackoverflow.com/questions/14311675/typescript-declaration-files-contain-class-definitions-with-no-member-implementa/14323673#14323673)
+
+개인적으로 생각하는 타입스크립트의 단점 중 하나는 과도하게 많은 옵션을 제공한다는 것인데, 사실 이 항목도 거기에 해당하는게 아닐까 싶다.
+`.d.ts` 파일은 기존에 존재하는 Javascript 혹은 Typescript의 class 구현체의 타입을 정의하기 위해 사용된다. `declare class`는 이 파일에서 사용되는데, 기본적으로 "다른 어딘가에 이 모양을 한 클래스가 있을 것이다"로 해석될 수 있다
+반대로 `interface`의 경우 정말 해당 객체의 모양을 잡을 때 사용된다고 생각하면 될듯하다.
+
+이와 다르게, 정말 사용자 입장에서 살펴보자면, `interface`와 `declare class`의 가장 큰 차이는 `new` 키워드라고 할 수 있다. `interface`에는 `new` 키워드를 사용할 수 없다.
