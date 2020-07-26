@@ -1,10 +1,9 @@
-j---
+---
 layout: post
 title: '의미있는 UI Testing 환경 구축기'
 date: 2020-02-06 23:15:00 +09:00
 categories: 'react,testing'
 published: false
-
 ---
 
 ## 동기
@@ -40,6 +39,9 @@ Faker
 [Write tests. Not too many. Mostly integration.](https://kentcdodds.com/blog/write-tests)
 
 ## Jest와 Testing Library를 통한 테스트 코드 작성
+
+[]()
+Testing Library는
 
 ## RosieJS + Faker를 통해 API 결과값 생성하기
 
@@ -164,5 +166,3 @@ Factory.define('comment')
 정의된 Factory를 기준으로 `post`를 생성하면, 자체적으로 `post`의 id값을 참고하는 `comment`들을 여러개 생성할 수 있다.
 
 ## axios-mock-adapter를 통해 API 호출 해결하기
-
-##

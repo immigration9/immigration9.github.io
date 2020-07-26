@@ -19,7 +19,7 @@ Emulation 이란 필드 자체가 흥미로워 보이기도 하고, C++과 운�
 
 매개변수가 인수값의 복사본을 갖는 동작을 값에 의한 호출 (call-by-value)라고 한다.
 
-lvalue라는 것은 비일시적 객체(nontemporary object)를 나타내는 값. 참조인 변수 혹은 참조를 반환하는 함수를 호출했을 대 결과인 변수가 lvalue이다.ㄴ
+lvalue라는 것은 비일시적 객체(nontemporary object)를 나타내는 값. 참조인 변수 혹은 참조를 반환하는 함수를 호출했을 대 결과인 변수가 lvalue이다.
 
 ### Pointers
 
