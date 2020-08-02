@@ -1,8 +1,8 @@
 ---
 layout: post
-title: '(번역) React를 사용하기 위해 알아야 하는 JavaScript (원제: Javascript to Know for React)'
+title: "(번역) React를 사용하기 위해 알아야 하는 JavaScript (원제: Javascript to Know for React)"
 date: 2020-07-26 17:00:00 +09:00
-categories: 'react,javascript'
+categories: "react,javascript"
 published: true
 ---
 
