@@ -1,3 +1,12 @@
+---
+layout: post
+title: 'Studying D3JS'
+date: 2019-06-16 17:00:00 +09:00
+categories: 'javascript'
+published: false
+---
+
+
 ## D3js 개요
 * D3js (이하 D3)는 셀렉션과 바인딩이다.
 1. 셀렉션: 선택된 묶음을 단위로 이동, 색상 변경, 데이터값 변경 등을 수행
