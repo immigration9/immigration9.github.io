@@ -6,7 +6,7 @@ categories: "react,javascript"
 published: true
 ---
 
-![Photo by Benjamin Voros](https://kentcdodds.com/static/3d283a7e351a639fbc71b810eee15eab/d6099/banner.webp)
+<!-- ![Photo by Benjamin Voros](https://kentcdodds.com/static/3d283a7e351a639fbc71b810eee15eab/d6099/banner.webp) -->
 Photo By Benjamin Voros
 
 ## React를 배우고 사용하기 위해 친숙해져야 하는 JavaScript 기능들
