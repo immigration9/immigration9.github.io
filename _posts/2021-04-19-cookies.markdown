@@ -1,0 +1,138 @@
+---
+layout: post
+title: 'Cookies'
+date: 2021-04-19 11:20:00 +09:00
+categories: 'web,cookies'
+published: true
+---
+
+## About Cookies
+
+웹 개발자로 꽤나 적지 않은 근무했지만, 고백하자면 쿠키를 제대로 공부해본 적은 없던 것 같다. 공부하지 않아도 항상 곁에 있다는 안도감도 한몫하긴 했지만, 사실 더 큰 이유는 그런 부분을 고민하는 개발을 하지 않아서라고 생각한다.
+
+제대로 된 공부를 하루라도 더 늦추고 싶지만, 크롬에서 배려를 해줘서(?) 더 이상은 지체할 수가 없게 되었다. 80버전대를 넘어오며 이제 더 이상 미룰 수 없게 되었기 때문에 지금이라도 확실하게 이해하고 넘어가고자 한다.
+
+## Cookie 생성
+
+생성에는 두 가지 방식이 있음
+
+1. Javascript를 이용하여 `document.cookie`를 호출
+2. Web server에서 `Set-cookie` response header를 설정하는 것
+
+Web server에서 response header를 설정하기 위해서는 아래와 같이 코드를 구성해보자.
+
+```javascript
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.setHeader('set-cookie', ['server-side-cookie=hello_world']);
+  res.send('Page with Cookies');
+});
+
+app.listen(8080, () => console.log('Server up'));
+```
+
+이제 실제 API를 호출 했을 때, Response Header에는 `set-cookie: server-side-cookie=hello_world`가 추가되었음을 볼 수 있다.
+
+## Domain
+
+도메인 항목은 Cookie 설정시 추가될 수 있다. Cookie를 받을 수 있는 허용된 호스트를 명시한다. 명시되지 않을 경우, Cookie를 설정한 host로 설정되지만, 이 host의 subdomain은 해당 Cookie를 사용할 수 없다.
+
+Domain이 설정되면, subdomain은 항상 포함되게 된다. 여기서 주의해야하는 점은, 아래와 같다.
+
+- Domain을 지정하는 것은, 지정하지 않는 것보다 **덜 제한적이다**. Subdomain에서도 Cookie를 사용하고 싶다면, 꼭 지정을 해주자.
+- `Domain=mozilla.org`를 지정하면, `developer.mozilla.org`와 같은 경로에서도 사용할 수 있게 된다.
+
+참고로, www.domain.com과 domain.com은 다른 Domain으로 인식되기 때문에, 항상 주의해야할 필요가 있다.
+
+[RFC 6265 Section 4.1.2.3](https://tools.ietf.org/html/rfc6265#section-4.1.2.3)
+2011년 4월에 채택된 RFC 6265에 따르면, Domain을 example.com으로 지정하면, www.example.com, 그리고 www.corp.example.com도 Cookie 허용 범위에 포함시킨다. 자주 등장하는 .example.com과 같은 경우에 나오는 앞의 %x2e (".")은 무시되고, 만약에 example.com. 과 같이 작성되면 해당 속성은 무시된다. Domain 속성을 추가하지 않으면, origin 서버에만 Cookie가 적용된다.
+
+| The Domain attribute specifies those hosts to which the cookie will be sent. For example, if the value of the Domain attribute is "example.com", the user agent will include the cookie in the Cookie header when making HTTP requests to example.com, www.example.com, and www.corp.example.com. (Note that a leading %x2E ("."), if present, is ignored even though that character is not permitted, but a trailing %x2E ("."), if present, will cause the user agent to ignore the attribute.) If the server omits the Domain attribute, the user agent will return the cookie only to the origin server.
+
+## Path
+
+요청된 URL에서 특정 Cookie가 허용된 subdirectory를 나타낸다.
+
+앞슬래시 (/) 캐릭터가 directory separator의 역할을 하며, `/` 만 쓸 경우에 모든 하위 디렉토리가 포함이 된다.
+즉, `path=/docs` 와 같이 선언한다면 `/docs`, `/docs/web`, `/docs/web/http`와 같은 모든 하위 디렉토리에서 사용이 가능하지만 `/non_docs`는 포함되지 않는다.
+
+## Expires와 Max Age
+
+Expires의 경우, Cookie의 최대 생명주기를 HTTP Date timestamp 형식으로 받는다. 지정되지 않을 경우, Cookie는 Session Cookie가 된다. 말 그대로, Browser가 닫히면 Cookie도 같이 삭제 된다고 보면 된다.
+
+- 여기서 주의해야할 점은, Expires 속성이 설정 될 때, 데드라인은 Cookie가 설정되는 Client에 의존적이다. (서버가 아니다).
+
+Max-Age의 경우, Cookie의 만료 시간을 초 단위로 나타낸다 (seconds). 0보다 아래의 숫자 (음수 포함)는 Cookie를 바로 만료시켜버린다.
+
+- Expires와 Max-Age 속성이 둘 다 설정 된 경우, Max-Age가 우선권을 갖는다.
+- 일반적으로, Expires / Max-Age 속성이 설정되지 않은 Cookie를 **Session cookie**라 말하고, 특정 시간 값에 만료되는 Cookie를 **Permanent cookie**라 한다.
+
+## Same Site Cookies
+
+Same-site는 무엇이고, Cross-site는 무엇일까?
+
+RFC 6265bis에 명시되어 있지만, 정말 설명이 너무나도 이해하기 어렵게 되어 있기 때문에 최대한 간소화하여 설명을 해보고자 한다.
+우선은 아래 용어들을 알아야 한다.
+
+- public suffix (공용 접미사): 공용 레지스트리에 의해 관리되는 도메인을 뜻한다. `example.com`의 public suffix는 `com`이 된다.
+- origin's "registrable domain" (등록 가능한 도메인): origin 호스트의 public suffix를 기준으로 왼쪽의 레이블을 포함한 값을 의미한다. 예를들어, `https://www.example.com`의 등록 가능한 도메인이란 `example.com`을 뜻한다.
+
+두 개의 Origin A와 B는 아래 알고리즘을 기준으로 same-site가 판별된다.
+
+1. 두 값이 모두 동일할 경우 same-site가 된다
+2. scheme/host/port를 기준으로 검사를 한다
+
+- scheme (`http://` `https://`)이 다를 경우 false가 반환된다.
+- A의 host가 B의 host가 같고, A의 host의 등록 가능한 도메인이 null일 경우 true를 반환한다.
+- A의 host의 등록 가능 도메인이 B의 host의 등록 가능한 도메인과 같고, null이 아닌 경우 true를 반환한다.
+
+3. 이외의 경우에는 false가 반환된다.
+
+즉, 여기서 true가 되는 경우 same-site가 되고, 이외의 경우에는 cross-site로 판별된다.
+
+예를들어서, `www.example.com`에서 `static.example.com`으로 호출을 보낸다면, 이건 same-site에 해당된다. 여기서 한 가지 궁금한 항목이 생기게 되는데, 그러면 `immigration9.github.io`와 `some-other-person.github.io`는 same-site가 아닐까?
+
+바로 그렇다. 둘은 별도의 사이트로 인식된다. 왜냐하면, 위에 언급된 public suffix에 등록되어 있으면, 해당 도메인의 서브도메인은 별도의 사이트로 분류되기 때문이다.
+
+[Public Suffix List by Mozilla](https://publicsuffix.org/list/public_suffix_list.dat)
+
+### SameSite Cookie Policy
+
+그렇다면 왜 이런 Cookie 정책이 필요한걸까? 바로 Cross-site request forgery (CSRF) 공격과 같은 형태를 막기 위함이다.
+예를들어, 나의 블로그는, 브라우저에서 `/posts/12/delete`로 접근하면, 해당 포스트를 지우는 기능이 있다고 가정하자. (물론 이건 엄청나게 멍청한 짓이다.). 유일하게 포스트를 지우는데 필요한 권한은 인증을 위한 Cookie 정보라고 가정하겠다.
+만약에, `www.delete-your-blog.com`과 같은 사이트에 접속하여, 거기에 위 URL을 접근하는 버튼을 누르면, `www.delete-your-blog.com`은 `www.my-precious-blog.com/posts/12/delete` URL을 접근한다.
+그리고 앞서 내가 블로그에 로그인을 해놨기 때문에 **쿠키가 존재하고**, 나의 글은 비극적인 최후를 맞이하게 된다.
+
+이런 문제를 해결하기 위해 SameSite Cookie policy가 등장하였다.
+
+- Strict
+  Strict는 기본적으로 '해당 웹사이트'에서의 동작 이외에 모든 경우에 Cookie의 사용을 금지한다. A라는 사이트에서 정의한 내용을 B 사이트에서 사용하고자 할 때, Cookie가 Strict로 정의되어 있으면, Cookie를 절대 사용할 수 없다. **또한, 외부 사이트에서 A 사이트로 링크를 통해 이동하고자 할 때도 Cookie는 최초에 작동하지 않는다.**
+
+- Lax
+  Lax는 말 그대로 조금은 더 느슨한 접근법을 갖는다. 여전히, A 사이트에서 정의한 내용은 B 사이트에서 사용할 수 없지만, B 사이트에서 A 사이트로 링크등을 통해 이동하는 (top-level navigation) 방법을 사용하였을 때는, 최초에 Cookie가 동작하게 된다.
+
+- None
+  말 그대로, Cookie가 어디서나 사용될 수 있게 해준다. 다만, 모든 최신 Chrome, Firefox 브라우저들은 기본적으로 `SameSite=None` 항목을 사용하고자 할 때, 필수적으로 `Secure`를 추가하도록 강제한다.
+
+## Secure
+
+Cookie가 서버로 전송될 때, `https://` scheme의 경우에만 전송되도록 한다. (localhost를 제외).
+
+- 기본적으로 `http://`의 insecure 사이트는 `Secure` 속성을 사용하여 Cookie를 설정할 수 없도록 되어있다.
+
+## HttpOnly
+
+서버사이드에서만 설정이 가능한 쿠키를 의미한다. Javascript에서는 `document.cookie` API를 통해 접근이 불가능해진다.
+
+## References
+
+[MDN: Using HTTP Cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)
+[MDN: Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)
+[MDN: Origin](https://developer.mozilla.org/en-US/docs/Glossary/Origin)
+[Hussein Nasser: HTTP Cookies Crash Course](https://www.youtube.com/watch?v=sovAIX4doOE)
+[Hussein Nasser: SameSite Cookie Attribute Explained by Example (Strict, Lax, None & No SameSite)](https://www.youtube.com/watch?v=aUF2QCEudPo)
+[web.dev: SameSite cookies explained](https://web.dev/samesite-cookies-explained/)
+[RFC 6265bis (revision 7): HTTP State Management Mechanism ](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07)
+[WHATWG issue: About the term "top-level-browsing-context"](https://github.com/whatwg/html/issues/2322)
