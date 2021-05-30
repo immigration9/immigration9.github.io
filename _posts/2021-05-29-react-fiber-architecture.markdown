@@ -35,10 +35,13 @@ Fiber는 단순히 코드만 봐서는 이해하기 어려운 여러가지 기�
 
 더 읽기 전에 아래 리소스들에 충분히 익숙해지길 추천한다.
 
-[React Components, Elements, and Instances](https://facebook.github.io/react/blog/2015/12/18/react-components-elements-and-instances.html)
-[Reconciliation](https://facebook.github.io/react/docs/reconciliation.html)
-[React Basic Theoretical Concepts](https://github.com/reactjs/react-basic)
-[React Design Principles](https://facebook.github.io/react/contributing/design-principles.html)
+[React Components, Elements, and Instances](https://facebook.github.io/react/blog/2015/12/18/react-components-elements-and-instances.html): "Component"는 지나치게 다양하게 사용되는 단어다. 이런 용어에 대한 확고한 이해는 매우 중요하다.
+
+[Reconciliation](https://facebook.github.io/react/docs/reconciliation.html): React 재조정 알고리즘에 대한 고레벨 수준의 설명
+
+[React Basic Theoretical Concepts](https://github.com/reactjs/react-basic): React의 개념적 모델에 대한 설명. 처음 읽을 때는 몇가지 항목들이 이해가 가지 않을 수 있다. 괜찮다, 읽으면 읽을 수록 이해가 된다.
+
+[React Design Principles](https://facebook.github.io/react/contributing/design-principles.html): 특히 스케쥴링 항목에 대해 집중해볼 것.
 
 ## 리뷰
 
