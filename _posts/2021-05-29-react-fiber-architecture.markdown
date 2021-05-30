@@ -11,7 +11,7 @@ published: true
 원문은 아래와 같습니다.
 [React Fiber Architecture](https://github.com/acdlite/react-fiber-architecture)
 
-# Introduction
+## Introduction
 
 React Fiber(리액트 파이버로 읽으면 될듯하다. 여기서는 원문 그대로 Fiber를 사용하겠다)는 현재 진행 중인 React core 알고리즘 재구성이다. React 팀의 2년간의 연구 결과이다.
 
@@ -19,7 +19,7 @@ Fiber의 목적은 animation, layout, gesture (애니메이션, 레이아웃, �
 
 이와 더불어 새로운 업데이트가 들어올 때 기존의 작업을 멈추거나, 정지하거나, 재사용하는 기능들을 포함한다. 이외에도 다른 종류에 업데이트에 우선순위를 부여하거나, 새로운 동시성 모드를 위한 초기 작업들이 포함된다.
 
-## About this document
+### About this document
 
 Fiber는 단순히 코드만 봐서는 이해하기 어려운 여러가지 기발한 컨셉들이 등장한다. 이 문서는 React 프로젝트에서 Fiber의 도입 방식을 추적하며 남겨온 메모들로부터 시작하였다. 문서의 양이 증가하며 나는 다른 이 문서가 다른이들에게 도움이 될만한 리소스가 될 수 있으리라 생각하게 되었다.
 
@@ -31,7 +31,7 @@ Fiber는 단순히 코드만 봐서는 이해하기 어려운 여러가지 기�
 
 당신이 이 문서를 읽은 뒤 당신이 충분히 Fiber를 이해하여 그 개발 과정을 충분히 따라갈 수 있도록 되고, 나아가 React에 다시 기여할 수 있는 것이 나의 목표다.
 
-## 사전 필요 항목
+### 사전 필요 항목
 
 더 읽기 전에 아래 리소스들에 충분히 익숙해지길 추천한다.
 
@@ -40,12 +40,12 @@ Fiber는 단순히 코드만 봐서는 이해하기 어려운 여러가지 기�
 [React Basic Theoretical Concepts](https://github.com/reactjs/react-basic)
 [React Design Principles](https://facebook.github.io/react/contributing/design-principles.html)
 
-# 리뷰
+## 리뷰
 
 아직 사전 필요 항목을 보기 전이라면 꼭 먼저 보길 바란다.
 새로운걸 배우기 전에, 몇 가지 주요 컨셉들을 짚고 넘어가자.
 
-## 재조정 (Reconciliation) 이란?
+### 재조정 (Reconciliation) 이란?
 
 _재조정(reconciliation)_
 
@@ -66,7 +66,7 @@ React API의 중심 아이디어는 업데이트로 하여금 전체 애플리�
 - 다른 컴포넌트 타입은 상당히 다른 트리를 생성할 것이라 예상된다. React는 이런 경우에 둘을 비교하지 않고, 이전 트리를 완전히 교체할 것이다.
 - 리스트(lists)는 key를 이용하여 비교된다. 여기서 key는 안정적이고, 예측 가능하며, 유일해야한다. (stable, predictable, and unique)
 
-## 재조정 vs 렌더링 (Reconciliation vs Rendering)
+### 재조정 vs 렌더링 (Reconciliation vs Rendering)
 
 DOM은 React가 렌더할 수 있는 환경들 중 하나이며, 이외에도 네이티브 iOS나 Android view를 대상으로 하는 React Native도 있다. (그렇기 때문에 "virtual DOM"이란 표현은 다소 잘못된 호칭이다).
 
@@ -76,7 +76,7 @@ DOM은 React가 렌더할 수 있는 환경들 중 하나이며, 이외에도 �
 
 Fiber는 이 조정기의 새로운 버전이라 볼 수 있다. 렌더링 과정에는 크게 관여하지 않지만, 렌더러들은 새로운 아키텍처에 맞춰 변화할 필요는 있다.
 
-## 스케쥴링 (Scheduling)
+### 스케쥴링 (Scheduling)
 
 _스케쥴링(scheduling)_
 작업이 언제 수행되어야 하는지를 결정하는 과정
@@ -85,14 +85,6 @@ _작업(work)_
 수행되어야 하는 어떠한 계산의 형태. 여기서 작업은 주로 `setState`와 같은 업데이트의 결과이다.
 
 React의 [디자인 원칙](https://facebook.github.io/react/contributing/design-principles.html#scheduling) 문서는 이 부분에 있어 너무 잘 쓰여져있어 그대로 인용하도록 하겠다.
-
-> In its current implementation React walks the tree recursively and calls render functions of the whole updated tree during a single tick. However in the future it might start delaying some updates to avoid dropping frames.
-
-> This is a common theme in React design. Some popular libraries implement the "push" approach where computations are performed when the new data is available. React, however, sticks to the "pull" approach where computations can be delayed until necessary.
-
-> React is not a generic data processing library. It is a library for building user interfaces. We think that it is uniquely positioned in an app to know which computations are relevant right now and which are not.
-
-> If something is offscreen, we can delay any logic related to it. If data is arriving faster than the frame rate, we can coalesce and batch updates. We can prioritize work coming from user interactions (such as an animation caused by a button click) over less important background work (such as rendering new content just loaded from the network) to avoid dropping frames.
 
 > 현재 도입방식에서 React는 한 번의 Tick 동안 재귀적으로 트리를 탐색하고 업데이트된 트리 전체의 렌더 함수들을 호출한다. 하지만 미래에는 프레임 드롭을 방지하기 위해 몇몇 업데이트들은 지연시킬 수 있다.
 
@@ -114,7 +106,7 @@ React는 아직 중요한 항목에 있어 이런 스케쥴링 장점을 살리�
 
 자 이제 우리는 Fiber 제작에 뛰어들 준비가 되었다. 다음 섹션은 여태까지 우리가 논의한 항목들에 비해 더 기술적이다. 더 나아가기 전에 꼭 이전 항목들에 익숙해지길 권장한다.
 
-# Fiber란 무엇인가?
+## Fiber란 무엇인가?
 
 우리는 이제 React Fiber 아키텍쳐의 심장에 대해 얘기해보고자 한다. Fiber는 애플리케이션 개발자들이 생각하는 것보다 훨씬 더 저레벨의 추상화된 형태로 존재한다. 이해하는 과정에서 지친 본인의 모습을 발견한다면, 낙담하지 않길 바란다. 계속해서 보다보면 어느순간 이해가 될 것이다. (정말 끝까지 이해가 안된다면, 어떻게하면 이 항목을 개선할 수 있을지도 제안해주길 바란다).
 
@@ -153,7 +145,7 @@ UI 렌더링을 최적화하기 위해 콜스택의 작업 방식이 커스터�
 
 다음섹션에서, fiber의 구조에 대해 더 살펴보자.
 
-## Fiber의 구조
+### Fiber의 구조
 
 구체적인 용어로 Fiber는 컴포넌트에 대한 입력과 출력에 대한 정보들을 가지고 있는 JavaScript 객체다.
 
@@ -230,10 +222,12 @@ _이 함수는 실제로 코드베이스에 있는 코드가 아니다. 보여�
 `alternate`
 
 _flush_
-fiber를 flush하는 것은 그 결과를 화면에 나타내는 것이다.
+
+- fiber를 flush하는 것은 그 결과를 화면에 나타내는 것이다.
 
 _work-in-progress_
-아직 완료되지 않은 fiber. 개념상으로 아직 반환되지 않은 스택 프레임을 의미한다.
+
+- 아직 완료되지 않은 fiber. 개념상으로 아직 반환되지 않은 스택 프레임을 의미한다.
 
 언제든지 컴포넌트 인스턴스는 여기에 부합하는 최대 두 개의 fiber를 갖는다. 현재 fiber(current fiber), flush된 fiber(flushed fiber), 그리고 work-in-progress fiber.
 
@@ -246,7 +240,8 @@ fiber의 대체재는 `cloneFiber`라는 함수를 통해 지연 생성(created 
 `output`
 
 _host component_
-React 애플리케이션의 리프 노드. 렌더링 환경에 특정지어진다. (Browser 애플리케이션의 경우 `div`, `span`, etc와 같은 항목들이다. JSX에서 전체 소문자를 사용하여 표시된다.
+
+- React 애플리케이션의 리프 노드. 렌더링 환경에 특정지어진다. (Browser 애플리케이션의 경우 `div`, `span`, etc와 같은 항목들이다. JSX에서 전체 소문자를 사용하여 표시된다.
 
 개념상으로, fiber의 결과물은 함수의 반환 값이다.
 
