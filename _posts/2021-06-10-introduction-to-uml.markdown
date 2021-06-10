@@ -3,7 +3,7 @@ layout: post
 title: "UML 소개와 Class Diagrams"
 date: 2021-06-10 20:00:00 +09:00
 categories: "uml"
-published: true
+published: false
 ---
 
 ## Reference
