@@ -1,12 +1,95 @@
 ---
 layout: post
-title: "Undo Redo Implementation"
+title: "Undo Redo Implementation Part 1: Command Pattern 학습"
 date: 2021-06-04 14:48:00 +09:00
-categories: "javascript,designpattern"
+categories: "designpattern"
 published: false
 ---
 
-## Command Pattern
+본 글은 다음 항목을 강하게 참조하고 있습니다.
+
+- Head First Design Pattern의 '6. Encapsulating Invocation: The Command Pattern'
+- Design Patterns: Elements of Reusable Object-Oriented Software
+
+[Reference: Head First Design Pattern](https://www.amazon.com/Head-First-Design-Patterns-Brain-Friendly/dp/0596007124)
+[Reference: Design Patterns: Elements of Reusable Object-Oriented Software](https://www.amazon.com/Design-Patterns-Object-Oriented-Addison-Wesley-Professional-ebook/dp/B000SEIBB8)
+
+## Command Pattern 채택 배경
+
+Undo Redo를 도입함에 있어, 가장 큰 고민거리 중 하나는, 발생한 액션을 어떻게 실행취소 할 것이고, 이걸 어떤 형태로 저장할 것인가에 대한 고민이었다.
+무엇보다 본 액션을 수행함에 있어 가장 큰 문제는 아래와 같다.
+
+- 액션은 단순히 직전만 실행 취소 하는 것이 아니라, 특정 단계까지 내려갈 수 있다.
+- 여기서 액션은 단일 액션이 아니다. 즉, 생성, 이동, 크기 조절 등 다양한 종류의 액션들이 같은 히스토리에 쌓이게 된다.
+- 실행 취소 후, 새로운 액션이 들어가게 되면 기존에 있던 작업들은 모두 사라져야 한다. (일반적인 Undo Redo의 행동 양식)
+
+이런 상황 속에서, 특정 액션을 단일 인터페이스 상에 저장하고, 이후에 다시 복원하거나 취소할 수 있는 매커니즘을 가진 방식으로 구현하는 것이 중요했다.
+단일 인터페이스로 구성하기 위해 실행되는 과정 (action)들을 하나의 실행 메소드(execute)로 통일시킬 필요가 있었고, 이를 위해 도입하기로 채택한 Command Pattern (명령 패턴)을 알아보고자 한다.
+
+## Command Pattern 이란?
+
+| Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.
+| 요청을 객체로 캡슐화시킴으로써, 서로 다른 요청이나 큐, 혹은 로그 요청을 갖는 클라이언트를 매개변수화하고, 해당 작업들에 대한 실행 취소 기능을 지원한다.
+
+Command Pattern은 행동 패턴(Behavioral Pattern) 중 하나이다. 행동 패턴들은 객체간의 알고리즘과 책임 할당에 관련 있다. 객체나 클래스의 패턴만을 설명할 뿐만 아니라 그들 사이의 커뮤니케이션 패턴도 같이 설명한다. 이런 패턴들은 런타임에 따라가기 어려운 복잡한 제어 흐름을 특정한다. 이 패턴을 통해 제어 흐름에서 벗어나 객체들의 상호 연결 방식에만 집중할 수 있게 해준다.
+
+이 중 하나인 Command Pattern은 메소드 호출을 캡슐화시킨다. 메소드 호출을 캡슐화시킴으로써, 실행을 수행하는 객체는 '어떻게 호출하지?'라는 부분을 생각할 필요가 없게 된다.
+예를들어, 아래서 살펴볼 홈 오토메이션의 사례를 살펴보자면, 가전 전체를 관장하는 하나의 리모콘은 제품을 켜고 끄는 버튼, 그리고 이 과정들을 취소할 수 있는 버튼을 가지고 있다.
+오해할까봐 먼저 말하지만, Command Pattern의 핵심은 단순히 아래와 같이 제품을 켠다 끈다의 개념이 아니다.
+
+```typescript
+class TurnOnSomeLightCommand implements Command {
+  ...
+  execute(light: Light) {
+    light.on();
+  }
+}
+```
+
+위의 예제가 언급하고자 하는 문제는 무엇일까? 바로 실행 단계에서 매개변수로 대상이 될 `light` 객체를 받는다는 것이다.
+물론 이런 결정 자체가 이해가 안가는 것은 아니다. 무엇보다 `light`를 켜고 끌 때, '어떤 조명을?' 이란 질문을 던지지 않을 수 없기 때문이다.
+Command Pattern은 객체의 생성이 될 때부터 대상까지 지정을 받는다. 즉, 객체 생성 단계에서 '주방 조명'인지 '침실 조명인지'를 모두 갖게 된다.
+
+그리고 이 과정 속에서 얻는 가장 큰 이점은, 이 액션을 실질적으로 실행(invoke)하는 리모콘에서는 단일 인터페이스로 액션들을 실행할 수 있게 된다.
+
+```typescript
+class TurnOnPredefinedLightCommand implements Command {
+  constructor(target: Light) {
+    this.light = target;
+  }
+
+  execute() {
+    this.light.on();
+  }
+}
+
+class RemoteControl {
+  buttonPresssed(command: Command) {
+    command.execute();
+  }
+}
+
+const light = new Light("bedroom");
+const remote = new RemoteControl();
+remote.buttonPressed(new TurnOnPredefinedLightCommand(light));
+```
+
+여기서 핵심은, 리모콘이 버튼 작동을 해석하여 요청을 보내는 것은 알 수 있지만, 홈 오토메이션이나 욕조를 켜고 끄는 방법에 대해 알 필요는 없다.
+가장 안좋은 형태는 아마 아래와 같이 각각의 상황을 리모콘이 모두 알고 있는 것이 아닐까?
+
+```typescript
+class RemoteControl {
+  buttonPressed(command: Command, target: any) {
+    if (command instanceof Light) {
+      command.turnLightOn(target);
+    } else if (command instanceof Tub) {
+      command.turnTubOn(target);
+    } else if (command instanceof WiFi) {
+      command.turnWifiOn(target);
+    }
+  }
+}
+```
 
 ### Command interface 도입하기
 
