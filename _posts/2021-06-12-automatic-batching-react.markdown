@@ -259,7 +259,7 @@ function handleClick() {
 
 이러한 방식이 Hooks를 처음 도입하였을 때 어색했겠지만, 이 방법을 통해 자동 배칭이 진행될 수 있었다.
 
-## `unstable_batchedUpdates`의 경우 어떻게 될까?
+## unstable_batchedUpdates의 경우 어떻게 될까?
 
 몇몇 React 라이브러리들으 이벤트 핸들러 밖의 `setState`가 배칭되는 것을 강제하기 위해 이 도큐먼트에도 없는 API를 사용하고 있다.
 
