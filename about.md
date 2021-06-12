@@ -18,4 +18,4 @@ You can find the source code for Jekyll at GitHub:
 
 [jekyll-organization]: https://github.com/jekyll -->
 
-Currently working at DramanCompany as a FrontEnd developer.
+FE Developer @ Naver Webtoon
