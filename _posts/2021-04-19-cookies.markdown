@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 'Cookies'
+title: "Cookies"
 date: 2021-04-19 11:20:00 +09:00
-categories: 'web,cookies'
+categories: "web,cookies"
 published: true
 ---
 
@@ -22,15 +22,15 @@ published: true
 Web server에서 response header를 설정하기 위해서는 아래와 같이 코드를 구성해보자.
 
 ```javascript
-const express = require('express');
+const express = require("express");
 const app = express();
 
-app.get('/', (req, res) => {
-  res.setHeader('set-cookie', ['server-side-cookie=hello_world']);
-  res.send('Page with Cookies');
+app.get("/", (req, res) => {
+  res.setHeader("set-cookie", ["server-side-cookie=hello_world"]);
+  res.send("Page with Cookies");
 });
 
-app.listen(8080, () => console.log('Server up'));
+app.listen(8080, () => console.log("Server up"));
 ```
 
 이제 실제 API를 호출 했을 때, Response Header에는 `set-cookie: server-side-cookie=hello_world`가 추가되었음을 볼 수 있다.
@@ -129,10 +129,17 @@ Cookie가 서버로 전송될 때, `https://` scheme의 경우에만 전송되�
 ## References
 
 [MDN: Using HTTP Cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)
+
 [MDN: Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)
+
 [MDN: Origin](https://developer.mozilla.org/en-US/docs/Glossary/Origin)
+
 [Hussein Nasser: HTTP Cookies Crash Course](https://www.youtube.com/watch?v=sovAIX4doOE)
+
 [Hussein Nasser: SameSite Cookie Attribute Explained by Example (Strict, Lax, None & No SameSite)](https://www.youtube.com/watch?v=aUF2QCEudPo)
+
 [web.dev: SameSite cookies explained](https://web.dev/samesite-cookies-explained/)
+
 [RFC 6265bis (revision 7): HTTP State Management Mechanism ](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07)
+
 [WHATWG issue: About the term "top-level-browsing-context"](https://github.com/whatwg/html/issues/2322)
