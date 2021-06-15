@@ -9,6 +9,9 @@ published: false
 ## Reference
 
 [UML Distilled: A Brief Guide to the Standard Object Modeling Language by Martin Fowler](https://www.amazon.com/UML-Distilled-Standard-Modeling-Language/dp/0321193687)
+[UML Class Diagram Tutorial](https://www.youtube.com/watch?v=UI6lqHOVHic)
+[UML Class Diagrams](https://www.youtube.com/watch?v=BhEoV57nj0Q)
+[UML Class and Object Diagrams](https://www.youtube.com/watch?v=sN2_CoB_kbw)
 
 ## Introduction
 
@@ -46,6 +49,8 @@ UML을 얘기할 때 대부분은 클래스 다이어그램이라 할 수 있다
 
 ### 속성(Attributes)으로 표기
 
+속성은 클래스의 인스턴스가 가지고 있는 주요한 데이터의 부분을 나타낸다. 필드, 변수, 프로퍼티로도 불린다.
+
 속성 표기는 클래스 박스 내부에 텍스트 한 줄로 표기된다. 여기서 필수인 항목은 이름만 해당되고, 그 이외에도 +(public) -(private) 로 공개 여부를 결정할 수 있으며, 다중성, 기본값 등 역시 표기될 수 있다.
 
 ### 관계(Associations)로 표기
@@ -55,3 +60,52 @@ UML을 얘기할 때 대부분은 클래스 다이어그램이라 할 수 있다
 ![properties-notation]({{ site.url }}/\_images/2021-06-10-introduction-to-uml/properties-notation.png)
 
 관계는 두 개의 클래스 사이의 소스 클래스에서 대상 클래스로 방향성 있는 선으로 표기된다. 프로퍼티의 이름은 관계의 대상 끝 쪽에 다중성과 같이 표기된다.
+
+### 다중성(Multiplicity)
+
+프로퍼티의 다중성은 얼마나 많은 객체가 프로퍼티에 채워질 것인지 나타낸다. 예를들어 아래와 같은 숫자들로 표현된다.
+
+- 1: 주문은 정확히 한 명의 손님을 갖는다
+- 0..1: 기업 주문 고객은 영업대표를 갖고 있을 수도, 갖지 않을 수도 있다
+- \*: 고객은 주문을 하지 않을 수도 있고, 주문 수에는 제한이 없다 (0~)
+
+일반적으로, 다중성은 2..4와 같이 하한선(2)과 상한선(4)으로 표현된다. 하한선은 양수와 0일 수 있고, 상한선은 양수와 무제한을 뜻한은 \*를 갖는다. 동일할 경우, 혹은 한쪽을 포괄하는 경우 하나로 축약할 수 있다. 예를들어 1..1은 1로 표현이 가능하고, 0..\*은 \*로 표현이 가능하다. 다중성의 기본값은 1이며, 이 때는 생략이 가능하다.
+
+추가로, 복수값을 갖는 경우, 복수형태로 이름을 짓는 것이 선호된다 (orders와 같이)
+
+### 관계의 방향 (Directions)
+
+단방향성 관계에서 아래와 같은 케이스를 살펴보자
+
+Class A -----> Class B
+
+이 경우, Class A는 Class B의 존재를 알고 있다.
+반대로, Class B는 Class A의 존재를 알지 못한다.
+
+예를들어, 주문(Order)과 제품(Product)의 관계를 살펴보자.
+
+Order -----> Product
+
+주문은 어떤 제품에 대한 주문인지를 알아야하지만, 반대로 제품은 어떤 주문이 본인을 가지고 있는지 알 필요가 없다.
+
+동일한 경우로, 사람(Person)과 주소(Address)의 관계도 동일하다.
+
+Person -----> Address
+
+사람은 주소를 알아야 하지만, 반대로 주소는 어떤 사람이 어떤 주소를 갖고 있는지 알 필요가 없다. 이런 경우는 has-a 관계로 설명되기도 한다.
+
+### 관계의 종류: Association, Aggregation, Composition
+
+연관(Association): 위에 설명되어있다.
+
+집합(Aggregation): 대상은 소유자의 부분으로 속하지만, 소유자가 없어진다고 구성하는 부분이 없어지지 않는 경우를 설명한다. 예를들어, 은행계좌는 고객에게 속하지만, 고객이 사라진다고 은행계좌는 없어지지 않고 남는다.
+
+구성(Composition): 대상은 소유자의 부분으로 속한다. 예를들어, 부서는 회사의 일부이며, 회사가 없으면 부서도 존재하지 않는다. 집합과 유사하지만, 소유자 (여기서 회사)가 없어지면, 구성하는 부분도 없어지게 된다 (없어지지 않는 집합과 다른 양상을 보인다)
+
+### 상속의 경우
+
+상속의 경우, 상속 받는 쪽에서 관계가 시작한다.
+
+### Event의 경우
+
+has-a가 성립하지 않는다. 서로 방향이 없는 선만 그려진다.
