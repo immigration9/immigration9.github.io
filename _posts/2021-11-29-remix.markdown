@@ -13,7 +13,9 @@ Remix로 할 수 있는 일들과 디테일한 장단점을 다뤄보기 전에,
 시간이 된다면 꼭 아래 Joke App Tutorial을 한 번쯤 해보는 것도 좋을듯하다.
 
 [Remix Framework](https://remix.run)
+
 [Remix Jokes App Tutorial](https://remix.run/docs/en/v1/tutorials/jokes)
+
 [Remix Tutorial with Kent](https://www.youtube.com/watch?v=hsIWJpuxNj0)
 
 ## Nested Routing이 주는 편안함
@@ -186,6 +188,7 @@ function validateJokeContent(content: string) {
 Optimistic UI, Race condition check, Error Handling, Form Validation 등 클라이언트에서 처리하기 다소 까다로웠던 것들도 Remix와 함께라면 고민하지 않아도 된다는 점에서 앞으로 최소한 사이드 프로젝트는 Remix로 할 것 같다는 생각이 들었다.
 
 마무리는 Remix가 갖는 철학 4가지에 대해 얘기하며 마무리 짓겠다.
+
 [Remix Philosophy](https://remix.run/docs/en/v1/guides/philosophy)
 
 1. 서버 클라이언트 모델을 차용하자
