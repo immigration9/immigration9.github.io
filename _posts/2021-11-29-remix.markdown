@@ -1,0 +1,195 @@
+---
+layout: post
+title: "Remix Tutorial을 해보며"
+date: 2021-11-29 08:00:00 +09:00
+categories: "react,remix"
+published: true
+---
+
+## Intro
+
+얼마전에 새로 v1을 오픈한 Remix Framework의 Jokes App Tutorial을 따라해봤다.
+Remix로 할 수 있는 일들과 디테일한 장단점을 다뤄보기 전에, 가볍게 느낌을 남겨보고자 한다.
+시간이 된다면 꼭 아래 Joke App Tutorial을 한 번쯤 해보는 것도 좋을듯하다.
+
+[Remix Framework](https://remix.run)
+[Remix Jokes App Tutorial](https://remix.run/docs/en/v1/tutorials/jokes)
+[Remix Tutorial with Kent](https://www.youtube.com/watch?v=hsIWJpuxNj0)
+
+## Nested Routing이 주는 편안함
+
+기본적으로 Nested Route는 파일시스템에 있는 폴더 - 파일 명칭을 기반으로 Route를 부분적으로 할 수 있는 기능을 의미한다.
+예를들어 `routes/index.tsx` 라는 파일이 있다면 URL상에서는 `https://my-service.com` 이 되고,
+`routes/jokes.tsx`은 URL에서 `https://my-service.com/jokes`에 접근했을 때의 결과가 된다.
+이제 jokes 안에 렌더될 항목들은 모두 jokes 폴더 안에 넣어주면 된다.
+
+`routes/jokes/index.tsx`는 앞선 `https://my-service.com/jokes`에 해당되고,
+`routes/jokes/$jokeId.tsx`는 이제 위 URL뒤에 `/jokes/some-random-id`와 같이 세부적인 항목으로 들어갔을 때 사용된다.
+
+기존에 Next.js를 사용해보았다면 익숙할 수 있는데, 여기는 마이너하면서 굉장히 큰 디테일이 숨겨져있다.
+위의 `jokes.tsx`가 렌더될 때, `/jokes/random-id`와 같이 URL이 입력되었다면 어떻게 렌더가 되는걸까?
+바로 `Outlet`이란 컴포넌트를 사용한다.
+
+이 `Outlet`을 통해 해당 부분에 필요한 데이터를 동적으로 넣어줄 수 있다.
+예를들어, `routes/jokes.tsx`에서 `routes/jokes/$jokeId.tsx`를 렌더하고 싶다면, 아래와 같이 코드를 넣어주면 된다.
+
+```jsx
+export default function JokesRoute() {
+  return (
+    <div className="jokes-layout">
+      <header>Welcome to Jokes!</header>
+      <main className="jokes-main">
+        <div className="container">
+          <div className="jokes-list">List of Jokes</div>
+          <div className="jokes-outlet">
+            <Outlet />
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+```
+
+여기서 `Outlet`은 Nested route를 위한 공간을 마련해준다고 보면 된다.
+
+Ruby on Rails와 같은 마법을 Remix가 해주는데, 이를 통해 큰 장점 여러가지를 얻을 수 있다.
+
+사전에 모든 Route에 대한 정보를 Framework가 사전에 알 수 있기에 스타일, 데이터, 모듈 로딩에 있어 최적화를 Framework단에서 해줄 수 있다.
+나아가 Preloading, CSS Load - Unload 등의 적용이 쉽고, 사전에 어떤 정보가 필요한지에 대한 parsing이 이미 완료되어 있기 때문에, 주소 변경이 발생하였을 때 모듈, 데이터, 스타일 모두를 병렬적으로 불러올 수 있다.
+
+## Framework가 부리는 마법
+
+Remix를 통해 서버와 클라이언트 코드를 굉장히 유기적으로 짤 수 있다는 점이 매력적이게 느껴졌다.
+대표적으로 `loader`와 `action`을 꼽을 수 있을 것 같은데,
+만약에 서버에서 데이터를 가져와서 렌더링을 하고 싶다면 간단하게 아래와 같이 `loader`를 렌더만 해주면 되었다.
+
+```typescript
+export let loader: LoaderFunction = async () => {
+  let jokeListItems = await db.joke.findMany({
+    take: 5,
+    select: { id: true, name: true },
+    orderBy: { createdAt: "desc" },
+  });
+  let data: LoaderData = { jokeListItems };
+  return data;
+};
+```
+
+그리고 사용하는 Client쪽에서는 `useLoaderData` hook을 사용하여 별도의 loading indicator나 `useEffect`를 사용하지 않아도 데이터를 바로 사용할 수 있었다.
+
+```typescript
+let data = useLoaderData<LoaderData>();
+```
+
+어떻게 보면 Nextjs의 `getServerSideProps`와 유사하다는 점을 볼 수 있다.
+
+`action`은 `loader`와 유사하지만 한 가지 차이점이 있다. 바로 호출되는 시점이다.
+`loader`는 언제나 페이지를 접근했을 때 실행되는 반면, `action`은 유저가 `GET`이 아닌 `POST, PUT, DELETE`와 같은 액션을 수행하였을 때 실행된다.
+즉, `form`이 Submit되는 항목이 호출되었을 때 실행되어 서버 사이드에서 처리가 필요한 코드를 실행해줄 수 있다.
+
+```typescript
+export let action: ActionFunction = async ({
+  request,
+}): Promise<Response | ActionData> => {
+  let form = await request.formData();
+  let name = form.get("name");
+  let content = form.get("content");
+
+  let joke = await db.joke.create({
+    data: { name, content },
+  });
+  return redirect(`/jokes/${joke.id}`);
+};
+```
+
+위 코드는 이제 클라이언트에서 `form`이 Submit되었을 때, 서버에서는 클라이언트로부터 받은 데이터를 기반으로 DB에 write를 수행하고, 클라이언트를 redirect시키는 것을 볼 수 있다.
+
+이 과정 속에서 가장 편리했던 점은, 해결하기 위해 기존에 React에서 사용했던 `isLoading`, `useEffect`와 같은 boilerplate가 단 하나도 필요하지 않았다는 점이다. **Remix는 프레임워크 자체적으로 Race Condition 문제를 해결해주기 때문에 유저가 굳이 `isLoading`과 `disable`을 통한 중복 호출 방지 등을 처리해줄 필요가 없기 때문이다.**
+
+### 정말 편한 Server-Client Form Validation
+
+Remix에서 Form validation이 편한 것에는 두 가지로 나뉜다고 볼 수 있다.
+유기적으로 서버와 클라이언트 사이에 validation을 할 수 있다는 것과, validation 하기 위한 로직을 공유할 수 있다는 점이다.
+
+```typescript
+export let action: ActionFunction = async ({
+  request,
+}): Promise<Response | ActionData> => {
+  let form = await request.formData();
+  let name = form.get("name");
+  let content = form.get("content");
+
+  let fieldErrors = {
+    name: validateJokeName(name),
+    content: validateJokeContent(content),
+  };
+  if (Object.values(fieldErrors).some(Boolean)) {
+    return { fieldErrors, fields: { name, content } };
+  }
+
+  let joke = await db.joke.create({
+    data: { name, content },
+  });
+  return redirect(`/jokes/${joke.id}`);
+};
+```
+
+위의 new joke submit에 validation을 추가하였다. 서버에서 validation을 진행하였고, Submit에 실패할 경우 위 예제와 같이 `fieldError`를 클라이언트에 내려주면 된다.
+클라이언트에서는 사용하기도 굉장히 간단한데, 동일한 데이터 구조 그대로 사용해주면 된다.
+
+```jsx
+<div>
+  <label>
+    Name:{" "}
+    <input
+      type="text"
+      defaultValue={actionData?.fields?.name}
+      name="name"
+      aria-invalid={Boolean(actionData?.fieldErrors?.name) || undefined}
+      aria-describedby={
+        actionData?.fieldErrors?.name ? "name-error" : undefined
+      }
+    />
+  </label>
+  {actionData?.fieldErrors?.name ? (
+    <p className="form-validation-error" role="alert" id="name-error">
+      {actionData.fieldErrors.name}
+    </p>
+  ) : null}
+</div>
+```
+
+말 그대로 위에서 내려준 이름을 그대로 사용하여 JSX에 녹여줄 수도 있다.
+무엇보다 이 과정 속에서 복잡한 상태 관리 등을 하지 않아도 되고 native HTML만으로 구현할 수 있었기 때문에 훨씬 매력적으로 다가왔다.
+
+또한, 위에 `validateJokeName`이나 `validateJokeContent`를 보았을 때, 또 하나의 장점이 있다.
+
+```typescript
+function validateJokeName(name: string) {
+  if (name.length < 3) {
+    return "Joke name must be at least 3 characters long";
+  }
+}
+function validateJokeContent(content: string) {
+  if (content.length < 10) {
+    return "Joke content must be at least 10 characters long";
+  }
+}
+```
+
+바로 revalidation 로직도 공유가 가능하다는 점이다. 물론 DB를 접근해야하거나 그런 케이스가 있다면 어렵겠지만, 일정부분 Javascript 코드는 서버와 클라이언트에서 동일하게 가져갈 수 있다는 점도 굉장히 매력적으로 다가왔다.
+
+## 사이드 프로젝트는 Remix로 할 것 같다
+
+별도로 서버 개발자가 같이 작업할 수 있는 환경이 아니라면 정말 좋은 선택이 될 수 있을 것 같았다. 좋은 웹사이트를 만들기 위한 많은 기능들을 굉장히 쉬운 형태로 제공하기 때문이다.
+Optimistic UI, Race condition check, Error Handling, Form Validation 등 클라이언트에서 처리하기 다소 까다로웠던 것들도 Remix와 함께라면 고민하지 않아도 된다는 점에서 앞으로 최소한 사이드 프로젝트는 Remix로 할 것 같다는 생각이 들었다.
+
+마무리는 Remix가 갖는 철학 4가지에 대해 얘기하며 마무리 짓겠다.
+[Remix Philosophy](https://remix.run/docs/en/v1/guides/philosophy)
+
+1. 서버 클라이언트 모델을 차용하자
+   - 서버는 더 빠르게 만들 수 있지만, 유저의 네트워크 환경은 빠르게 만들 수 없다. 이 문제를 해결하려면 네트워크를 통해 보내는 데이터의 양을 줄일 수 밖에 없다. 더 적은 양의 Javascript, JSON, CSS를 지향하자.
+2. Web의 기초라 할 수 있는 브라우저, HTTP, 그리고 HTML을 기반으로 작업하자. 최근 몇 년 사이에 이들이 정말 좋아졌다.
+3. Javascript를 통해 브라우저 행동양식을 모방하여 유저 경험을 증대하자.
+4. 너무 추상화하지 말자
