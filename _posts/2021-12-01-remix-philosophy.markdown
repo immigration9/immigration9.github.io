@@ -19,7 +19,9 @@ Remix의 철학은 4개로 요약할 수 있다.
 3. JavaScript를 통해 Browser 행동양식을 에뮬레이트하여 유저 경험을 증대시킨다.
 4. 기반에 깔린 기술들을 지나치게 추상화하지 않는다.
 
-## 서버/클라이언트 모델 (Server/Client Model)
+## 서버/클라이언트 모델
+
+#### Server/Client Model
 
 당신의 서버를 빠르게 할 수 있지만, 사용하는 유저의 네트워크는 빠르게 할 수 없다.
 
@@ -94,7 +96,9 @@ export default function Gists() {
 
 이 방법은 기존의 12kB 압축, 75kB 비압축의 결과물에서 1.8kB 압축, 3.8kB 전체로 낮춘다. 이렇게 하면 20배나 데이터의 양이 줄어든 것을 볼 수 있다. 또한 Remix는 페이지가 렌더되기 전에 해당 데이터를 가져올 수 있기 때문에 우리는 모든 케이스에 스켈레톤 UI를 포함할 필요가 없어진다. 이것은 Server/Client 모델을 차용함으로 유저 네트워크로 더 적은 양의 데이터를 보냄에 따라 어떻게 애플리케이션을 더 빠르게 만들 수 있는지를 보여주는 하나의 사례에 불과하다.
 
-## 웹 표준, HTTP, 그리고 HTML (Web Standards, HTTP, and HTML)
+## 웹 표준, HTTP, 그리고 HTML
+
+#### Web Standards, HTTP, and HTML
 
 이 기술들은 오랜 기간 동안 있어왔다. 정말 단단한 기반을 가지고 있다. Remix는 이들을 완벽하게 이용한다. Remix는 URL을 이용한 asset 서빙, 동적 서버 렌더링, 그리고 `<link rel=prefetch>`와 같은 HTML 기능들을 HTTP Caching과 조합하여 애플리케이션을 빠르게 만들기 위한 모든 도구들을 갖춘다. Browser와 HTML은 우리가 사용하기 시작했을 때부터 지난 20년간 정말 좋아졌다.
 
@@ -102,7 +106,9 @@ export default function Gists() {
 
 Data mutation시 우리는 HTML form을 사용하였다. 다음 페이지를 위해 data와 asset들을 먼저 가져오기 위해 (prefetch) 우리는 `<link rel="prefetch">`를 사용하였고, 리소스를 캐싱하는 복잡한 캐싱 로직은 브라우저로 하여금 담당할 수 있도록 하였다. Remix는 만약 특정 유즈 케이스에서 브라우저 API가 제공된다면 그걸 사용한다.
 
-## 점진적 향상 (Progressive Enhancement)
+## 점진적 향상
+
+#### Progressive Enhancement
 
 대부분의 최신 프레임워크들이 데이터에 대해 read API만 제공하는 반면, Remix는 read와 write 모두를 제공한다. HTML `<form>`은 90년대부터 Data mutation에 있어 핵심이었고, Remix는 해당 API를 사용하고 강화시킨다. 이를 통해 Remix 애플리케이션의 데이터 레이어로 하여금 페이지의 JavaScript 유무와 상관없이 작동하게 한다.
 
@@ -120,7 +126,9 @@ JavaScript를 추가함으로써 페이지 전환시 Remix는 두 방향에서 �
 
 여기의 포인트는 JavaScript 없이 애플리케이션이 돌아가는 것이 아니라 간단한 Server/Client 모델을 유지하는 것이다.
 
-## 지나치게 추상화하지 말라 (Don't Over Abstract)
+## 지나치게 추상화하지 말라
+
+#### Don't Over Abstract
 
 이건 우리가 좀 더 강조하고 싶은건데, Remix 이전에 우리는 지난 5년간 교육자였다. 우리의 슬로건은 *더 나은 웹사이트를 만들자*이다. 조금 더 추가하자면: *더 나은 웹사이트를 만들자, 가끔은 Remix를 이용해서*가 될 것이다. Remix를 잘하게 되면, 의도치않게 웹 개발도 잘하게 될 것이다.
 
