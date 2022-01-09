@@ -6,10 +6,11 @@ categories: "typescript"
 published: true
 ---
 
-본 글은 Kent C. Dodds의 Get a catch block error message with TypeScript 글의 한글 번역본입니다.
+**본 글은 Kent C. Dodds의 Get a catch block error message with TypeScript 글의 한글 번역본입니다.**
+
 [Get a catch block error message with TypeScript](https://kentcdodds.com/blog/get-a-catch-block-error-message-with-typescript)
 
----
+## 본문
 
 아래 코드를 한 번 보자.
 
@@ -161,9 +162,7 @@ function getErrorMessage(error: unknown) {
 }
 ```
 
----
-
-### 역자 해설
+## 역자 해설
 
 ```typescript
 function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
